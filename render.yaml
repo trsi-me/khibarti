@@ -1,0 +1,13 @@
+# نشر: New -> Blueprint -> اربط الريبو
+# الويب من عندك جاهز في backend/web (شغّل publish_flutter_web.ps1 ثم ارفع backend/web مع الريبو)
+# Render يشغّل Node فقط — بدون إعادة flutter build
+
+services:
+  - type: web
+    name: khibarti
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
