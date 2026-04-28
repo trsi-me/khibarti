@@ -5,6 +5,7 @@ import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/join_session_screen.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/session_format.dart';
 
 /// جلسات الخبير فقط — انضم، إلغاء. لا تقييم ولا شهادة (الطالب من يقيّم)
 class ExpertSessionsScreen extends StatefulWidget {
@@ -162,8 +163,14 @@ class _SessionList extends StatelessWidget {
       itemCount: sessions.length,
       itemBuilder: (context, i) {
         final s = sessions[i];
-        final title = '${l10n.withStudent} — ${s['scheduled_date']} ${s['scheduled_time']}';
-        final subtitle = s['specialty'] as String? ?? '';
+        final when = formatSessionWhen(
+          s['scheduled_date'] as String? ?? '',
+          s['scheduled_time'] as String? ?? '',
+          Localizations.localeOf(context),
+        );
+        final spec = s['specialty'] as String? ?? '';
+        final title = l10n.withStudent;
+        final subtitle = [when, spec].where((e) => e.isNotEmpty).join('\n');
         List<Widget>? actions;
         if (isUpcoming && !isCancelled) {
           actions = [

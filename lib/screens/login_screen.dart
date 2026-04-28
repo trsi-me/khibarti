@@ -32,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _nameController = TextEditingController();
   final _api = ApiService.instance;
   bool _loading = false;
+  bool _acceptedTerms = false;
 
   @override
   void dispose() {
@@ -44,9 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _loading = true);
-
     final signUp = widget.adminOnly ? false : widget.isSignUp;
+    if (signUp && !_acceptedTerms) {
+      _showSnack(AppLocalizations.of(context).agreeToTermsError);
+      return;
+    }
+    setState(() => _loading = true);
 
     if (signUp) {
       final email = _emailController.text.trim();
@@ -184,6 +188,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     textDirection: TextDirection.ltr,
                     validator: (v) => v != _passwordController.text ? 'كلمتا المرور غير متطابقتين' : null,
+                  ),
+                  const SizedBox(height: 8),
+                  CheckboxListTile(
+                    value: _acceptedTerms,
+                    onChanged: (v) => setState(() => _acceptedTerms = v ?? false),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      AppLocalizations.of(context).agreeToTerms,
+                      style: const TextStyle(fontSize: 14, height: 1.3),
+                      textDirection: TextDirection.rtl,
+                    ),
                   ),
                 ],
                 const SizedBox(height: 20),

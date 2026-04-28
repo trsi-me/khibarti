@@ -169,6 +169,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
           name: name,
           specialty: specialty,
           rating: rating,
+          isVerified: (e['is_verified'] == 1 || e['is_verified'] == true),
           extraInfo: '$years سنة',
           onTap: () => Navigator.push(
             context,

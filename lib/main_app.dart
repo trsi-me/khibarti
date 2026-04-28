@@ -112,32 +112,32 @@ class _MainAppState extends State<MainApp> {
   ) {
     final List<({IconData icon, String label})> items = isAdmin
         ? [
-            (icon: Icons.dashboard_customize, label: l10n.navBarAdminDash),
-            (icon: Icons.groups_rounded, label: l10n.navBarAdminUsers),
-            (icon: Icons.event_available, label: l10n.navBarAdminSessions),
-            (icon: Icons.person, label: l10n.navBarProfile),
-            (icon: Icons.settings, label: l10n.navBarSettings),
+            (icon: Icons.dashboard_customize_outlined, label: l10n.navBarAdminDash),
+            (icon: Icons.groups_outlined, label: l10n.navBarAdminUsers),
+            (icon: Icons.event_available_outlined, label: l10n.navBarAdminSessions),
+            (icon: Icons.person_outline, label: l10n.navBarProfile),
+            (icon: Icons.settings_outlined, label: l10n.navBarSettings),
           ]
         : isExpert
             ? [
-                (icon: Icons.dashboard, label: l10n.navBarHome),
-                (icon: Icons.calendar_today, label: l10n.navBarExpertSessions),
-                (icon: Icons.person, label: l10n.navBarProfile),
-                (icon: Icons.settings, label: l10n.navBarSettings),
+                (icon: Icons.dashboard_outlined, label: l10n.navBarHome),
+                (icon: Icons.calendar_today_outlined, label: l10n.navBarExpertSessions),
+                (icon: Icons.person_outline, label: l10n.navBarProfile),
+                (icon: Icons.settings_outlined, label: l10n.navBarSettings),
               ]
             : isCompany
                 ? [
-                    (icon: Icons.dashboard, label: l10n.navBarHome),
-                    (icon: Icons.people, label: l10n.navBarCompanyExperts),
-                    (icon: Icons.person, label: l10n.navBarProfile),
-                    (icon: Icons.settings, label: l10n.navBarSettings),
+                    (icon: Icons.dashboard_outlined, label: l10n.navBarHome),
+                    (icon: Icons.people_outline, label: l10n.navBarCompanyExperts),
+                    (icon: Icons.person_outline, label: l10n.navBarProfile),
+                    (icon: Icons.settings_outlined, label: l10n.navBarSettings),
                   ]
                 : [
-                    (icon: Icons.home, label: l10n.navBarHome),
-                    (icon: Icons.search, label: l10n.navBarExplore),
-                    (icon: Icons.calendar_today, label: l10n.navBarSessions),
-                    (icon: Icons.person, label: l10n.navBarProfile),
-                    (icon: Icons.settings, label: l10n.navBarSettings),
+                    (icon: Icons.home_outlined, label: l10n.navBarHome),
+                    (icon: Icons.search_outlined, label: l10n.navBarExplore),
+                    (icon: Icons.calendar_today_outlined, label: l10n.navBarSessions),
+                    (icon: Icons.person_outline, label: l10n.navBarProfile),
+                    (icon: Icons.settings_outlined, label: l10n.navBarSettings),
                   ];
     return List.generate(items.length, (i) {
       final selected = i == navIndex;
@@ -162,7 +162,7 @@ class _MainAppState extends State<MainApp> {
                 children: [
                   Icon(
                     items[i].icon,
-                    size: 24,
+                    size: 26,
                     color: selected
                         ? AppColors.primary
                         : AppColors.textSecondary,

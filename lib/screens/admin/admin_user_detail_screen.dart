@@ -30,6 +30,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   int? _roleId;
   String? _roleName;
   String? _createdAt;
+  bool _expertVerified = false;
 
   InputDecoration _fieldDec(String label, {String? hint}) {
     return InputDecoration(
@@ -88,6 +89,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     _roleId = d['role_id'] is int ? d['role_id'] as int : int.tryParse('${d['role_id']}');
     _roleName = d['role_name']?.toString();
     _createdAt = d['created_at']?.toString();
+    final ev = d['expert_verified'];
+    _expertVerified = ev == 1 || ev == true;
     setState(() {
       _data = d;
       _loading = false;
@@ -112,6 +115,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         password: _passwordCtrl.text.trim().isNotEmpty ? _passwordCtrl.text : null,
         roleId: _isTargetAdmin ? null : _roleId,
         isBlocked: _blocked,
+        expertVerified: (!_isTargetAdmin && _roleId == 2) ? _expertVerified : null,
       );
       _passwordCtrl.clear();
       if (!mounted) return;
@@ -213,8 +217,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                   const SizedBox(height: 12),
                   TextField(
                     controller: _emailCtrl,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: _fieldDec(l10n.email),
+                    keyboardType: TextInputType.text,
+                    decoration: _fieldDec(l10n.email, hint: l10n.adminAddUserHint),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -278,6 +282,35 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                     ),
                   ],
                   const SizedBox(height: 16),
+                  if (!_isTargetAdmin && _roleId == 2)
+                    Material(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      child: SwitchListTile(
+                        value: _expertVerified,
+                        onChanged: (v) {
+                          HapticFeedback.lightImpact();
+                          setState(() => _expertVerified = v);
+                        },
+                        title: Text(l10n.expertVerifiedToggle),
+                        subtitle: Text(l10n.expertVerifiedDesc),
+                        thumbColor: WidgetStateProperty.resolveWith((states) {
+                          if (states.contains(WidgetState.selected)) {
+                            return AppColors.primary;
+                          }
+                          return null;
+                        }),
+                        secondary: Icon(
+                          Icons.verified_rounded,
+                          color: _expertVerified ? AppColors.primary : Colors.grey,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.12)),
+                        ),
+                      ),
+                    ),
+                  if (!_isTargetAdmin && _roleId == 2) const SizedBox(height: 12),
                   Material(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),

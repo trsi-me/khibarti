@@ -205,7 +205,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       children: [
         _RoleButton(
           label: l10n.student,
-          icon: Icons.school,
+          icon: Icons.school_outlined,
           roleId: 1,
           selected: _selectedRole == 1,
           onTap: () => setState(() => _selectedRole = 1),
@@ -213,7 +213,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         const SizedBox(width: 14),
         _RoleButton(
           label: l10n.expert,
-          icon: Icons.person,
+          icon: Icons.person_outline,
           roleId: 2,
           selected: _selectedRole == 2,
           onTap: () => setState(() => _selectedRole = 2),
@@ -221,7 +221,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         const SizedBox(width: 14),
         _RoleButton(
           label: l10n.company,
-          icon: Icons.business,
+          icon: Icons.business_outlined,
           roleId: 3,
           selected: _selectedRole == 3,
           onTap: () => setState(() => _selectedRole = 3),
@@ -328,7 +328,8 @@ class _RoleButton extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 32,
+              size: 34,
+              weight: 600,
               color: const Color(0xFF1B5E57),
             ),
             const SizedBox(height: 6),

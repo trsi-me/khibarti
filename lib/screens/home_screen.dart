@@ -6,6 +6,7 @@ import 'package:khibarti/screens/join_session_screen.dart';
 import 'package:khibarti/screens/notifications_screen.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/session_format.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -142,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
             name: e['name'] as String? ?? '',
             specialty: e['specialty'] as String? ?? '',
             rating: ((e['rating'] ?? 0) as num).toDouble(),
+            isVerified: (e['is_verified'] == 1 || e['is_verified'] == true),
             onTap: () {},
           );
         },
@@ -163,7 +165,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Icon(Icons.event_available_rounded, color: AppColors.onPrimary, size: 22),
           ),
           title: s['expert_name'] as String? ?? '',
-          subtitle: '${s['scheduled_date']} - ${s['scheduled_time']}',
+          subtitle: [
+            formatSessionWhen(
+              s['scheduled_date'] as String? ?? '',
+              s['scheduled_time'] as String? ?? '',
+              AppState.locale,
+            ),
+            s['specialty'] as String? ?? '',
+          ].where((e) => e.trim().isNotEmpty).join('\n'),
           actions: [
             ElevatedButton(
               onPressed: () => _openJoinSession(s),
@@ -223,12 +232,14 @@ class _ExpertCard extends StatelessWidget {
   final String name;
   final String specialty;
   final double rating;
+  final bool isVerified;
   final VoidCallback onTap;
 
   const _ExpertCard({
     required this.name,
     required this.specialty,
     required this.rating,
+    this.isVerified = false,
     required this.onTap,
   });
 
@@ -240,6 +251,7 @@ class _ExpertCard extends StatelessWidget {
         name: name,
         specialty: specialty,
         rating: rating,
+        isVerified: isVerified,
         onTap: onTap,
         width: 168,
       ),

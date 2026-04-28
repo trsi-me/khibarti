@@ -3,9 +3,8 @@ import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
-import 'package:khibarti/screens/expert_chat_screen.dart';
 
-/// واجهة الشركة — استعراض الخبراء والتواصل معهم
+/// واجهة الشركة — أسماء الخبراء وتصريح لكل خبير (بدون تواصل عبر التطبيق)
 class CompanyExpertsScreen extends StatefulWidget {
   const CompanyExpertsScreen({super.key});
 
@@ -62,8 +61,8 @@ class _CompanyExpertsScreenState extends State<CompanyExpertsScreen> {
             Text(
               l10n.browseExperts,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.grey.shade600,
-              ),
+                    color: Colors.grey.shade600,
+                  ),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -107,56 +106,47 @@ class _CompanyExpertsScreenState extends State<CompanyExpertsScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.65,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: _experts.length,
-              itemBuilder: (context, i) {
-                final e = _experts[i];
-                final expertUserId = e['user_id'] as int?;
-                final expertName = e['name'] as String? ?? '';
-                return KhibartiCard.expert(
-                  name: expertName,
-                  specialty: e['specialty'] as String? ?? '',
-                  rating: ((e['rating'] ?? 0) as num).toDouble(),
-                  extraInfo: '${e['sessions_count'] ?? 0} جلسة',
-                  onTap: expertUserId != null
-                      ? () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ExpertChatScreen(expertUserId: expertUserId, expertName: expertName),
-                            ),
-                          )
-                      : () {},
-                  action: expertUserId != null
-                      ? SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ExpertChatScreen(expertUserId: expertUserId, expertName: expertName),
-                              ),
-                            ),
-                            icon: const Icon(Icons.chat_bubble_outline, size: 18),
-                            label: Text(l10n.contact),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.primary,
-                              side: const BorderSide(color: AppColors.primary),
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                            ),
+            ..._experts.map((e) {
+              final expertName = e['name'] as String? ?? '';
+              final specialty = e['specialty'] as String? ?? '';
+              final verified = e['is_verified'] == 1 || e['is_verified'] == true;
+              return KhibartiCard.listItem(
+                leading: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundColor: AppColors.primary.withOpacity(0.2),
+                      child: Text(
+                        expertName.isNotEmpty ? expertName[0] : '?',
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    if (verified)
+                      Positioned(
+                        right: -2,
+                        bottom: -2,
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1B5E57),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
                           ),
-                        )
-                      : null,
-                );
-              },
-            ),
+                          child: const Icon(Icons.verified_rounded, size: 12, color: Color(0xFFFFFBF0)),
+                        ),
+                      ),
+                  ],
+                ),
+                title: expertName,
+                subtitle: '$specialty\n\n${l10n.companyExpertDisclaimer}',
+                showChevron: false,
+              );
+            }),
           ],
         ),
       ),

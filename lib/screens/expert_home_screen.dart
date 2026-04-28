@@ -7,6 +7,7 @@ import 'package:khibarti/screens/expert_chat_screen.dart';
 import 'package:khibarti/screens/notifications_screen.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/session_format.dart';
 
 /// واجهة الخبير فقط — جلساتي القادمة، إحصائياتي، إشعارات
 class ExpertHomeScreen extends StatefulWidget {
@@ -129,6 +130,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
             value: rating.toStringAsFixed(1),
             label: l10n.myRating,
             iconColor: Colors.amber,
+            showValue: false,
           ),
         ),
         const SizedBox(width: 12),
@@ -161,10 +163,17 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
           leading: const CircleAvatar(
             radius: 24,
             backgroundColor: Color(0xFF1B5E57),
-            child: Icon(Icons.video_call_rounded, color: AppColors.onPrimary, size: 22),
+            child: Icon(Icons.event_available_rounded, color: AppColors.onPrimary, size: 22),
           ),
-          title: '${l10n.withStudent} — ${s['scheduled_date']} ${s['scheduled_time']}',
-          subtitle: s['specialty'] as String? ?? '',
+          title: l10n.withStudent,
+          subtitle: [
+            formatSessionWhen(
+              s['scheduled_date'] as String? ?? '',
+              s['scheduled_time'] as String? ?? '',
+              AppState.locale,
+            ),
+            s['specialty'] as String? ?? '',
+          ].where((e) => e.isNotEmpty).join('\n'),
           actions: [
             ElevatedButton(
               onPressed: () => _openJoinSession(s),

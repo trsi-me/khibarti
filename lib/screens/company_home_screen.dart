@@ -18,7 +18,6 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
   final _api = ApiService.instance;
   List<Map<String, dynamic>> _experts = [];
   List<Map<String, dynamic>> _notifications = [];
-  int _totalSessions = 0;
 
   @override
   void initState() {
@@ -31,15 +30,10 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
     if (userId == null) return;
     final experts = await _api.getExperts();
     final notifications = await _api.getNotificationsForUser(userId);
-    int total = 0;
-    for (final e in experts) {
-      total += (e['sessions_count'] as num?)?.toInt() ?? 0;
-    }
     if (mounted) {
       setState(() {
         _experts = experts;
         _notifications = notifications;
-        _totalSessions = total;
       });
     }
   }
@@ -79,24 +73,10 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
 
   Widget _buildStats(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Row(
-      children: [
-        Expanded(
-          child: KhibartiCard.stat(
-            icon: Icons.people_rounded,
-            value: '${_experts.length}',
-            label: l10n.expertsCount,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: KhibartiCard.stat(
-            icon: Icons.video_call_rounded,
-            value: '$_totalSessions',
-            label: l10n.sessionsCount,
-          ),
-        ),
-      ],
+    return KhibartiCard.stat(
+      icon: Icons.people_outline,
+      value: '${_experts.length}',
+      label: l10n.expertsCount,
     );
   }
 

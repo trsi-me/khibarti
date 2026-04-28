@@ -445,6 +445,7 @@ class ApiService {
     String? phone,
     String? country,
     bool? isBlocked,
+    bool? expertVerified,
   }) async {
     try {
       final body = <String, dynamic>{'adminUserId': adminUserId};
@@ -455,6 +456,7 @@ class ApiService {
       if (phone != null) body['phone'] = phone.isEmpty ? null : phone;
       if (country != null) body['country'] = country.isEmpty ? null : country;
       if (isBlocked != null) body['isBlocked'] = isBlocked;
+      if (expertVerified != null) body['expertVerified'] = expertVerified;
       if (body.length <= 1) return null;
       final r = await http
           .patch(
@@ -467,6 +469,44 @@ class ApiService {
         return Map<String, dynamic>.from(jsonDecode(r.body) as Map);
       }
       String err = 'فشل التحديث';
+      try {
+        final m = jsonDecode(r.body) as Map?;
+        if (m?['error'] != null) err = m!['error'] as String;
+      } catch (_) {}
+      throw ApiException(err);
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw ApiException('تأكد من تشغيل السيرفر والاتصال بالشبكة');
+    }
+  }
+
+  /// إنشاء مستخدم جديد من الإدارة — الحقل «بريد» يقبل أي نص
+  Future<Map<String, dynamic>?> adminCreateUser(
+    int adminUserId, {
+    required String email,
+    required String password,
+    required String name,
+    required int roleId,
+  }) async {
+    try {
+      final r = await http
+          .post(
+            Uri.parse('$_base/api/admin/users'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'adminUserId': adminUserId,
+              'email': email,
+              'password': password,
+              'name': name,
+              'roleId': roleId,
+            }),
+          )
+          .timeout(const Duration(seconds: 12));
+      if (r.statusCode == 200) {
+        return Map<String, dynamic>.from(jsonDecode(r.body) as Map);
+      }
+      String err = 'فشل الإنشاء';
       try {
         final m = jsonDecode(r.body) as Map?;
         if (m?['error'] != null) err = m!['error'] as String;

@@ -11,6 +11,7 @@ class KhibartiCard {
     required String value,
     required String label,
     Color? iconColor,
+    bool showValue = true,
   }) {
     final color = iconColor ?? AppColors.primary;
     return Container(
@@ -32,16 +33,19 @@ class KhibartiCard {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 40, color: color),
-            const SizedBox(height: 14),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-                color: color,
-                letterSpacing: -0.5,
+            if (showValue) ...[
+              const SizedBox(height: 14),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                  color: color,
+                  letterSpacing: -0.5,
+                ),
               ),
-            ),
+            ] else
+              const SizedBox(height: 8),
             const SizedBox(height: 4),
             Text(
               label,
@@ -66,6 +70,7 @@ class KhibartiCard {
     List<Widget>? actions,
     Color? accentColor,
     VoidCallback? onTap,
+    bool showChevron = true,
   }) {
     final color = accentColor ?? AppColors.primary;
     final content = Column(
@@ -104,11 +109,12 @@ class KhibartiCard {
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 14,
-              color: color.withOpacity(0.7),
-            ),
+            if (showChevron)
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 14,
+                color: color.withOpacity(0.7),
+              ),
           ],
         ),
         if (actions != null && actions.isNotEmpty) ...[
@@ -159,6 +165,8 @@ class KhibartiCard {
     String? extraInfo,
     Widget? action,
     double? width,
+    bool showRating = true,
+    bool isVerified = false,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -180,29 +188,61 @@ class KhibartiCard {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: 32,
-              backgroundColor: AppColors.primary.withOpacity(0.12),
-              child: Text(
-                name.isNotEmpty ? name[0] : '?',
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 32,
+                  backgroundColor: AppColors.primary.withOpacity(0.12),
+                  child: Text(
+                    name.isNotEmpty ? name[0] : '?',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
+                if (isVerified)
+                  Positioned(
+                    right: -2,
+                    bottom: -2,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1B5E57),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: const Icon(Icons.verified_rounded, size: 16, color: Color(0xFFFFFBF0)),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 10),
-            Text(
-              name,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: AppColors.textPrimary,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: AppColors.textPrimary,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (isVerified) ...[
+                  const SizedBox(width: 4),
+                  Icon(Icons.verified_rounded, size: 16, color: Colors.teal.shade700),
+                ],
+              ],
             ),
             const SizedBox(height: 4),
             Text(
@@ -212,31 +252,44 @@ class KhibartiCard {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.star_rounded, size: 14, color: Colors.amber),
-                const SizedBox(width: 4),
-                Text(
-                  rating.toStringAsFixed(1),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                if (extraInfo != null) ...[
-                  const SizedBox(width: 6),
+            if (showRating) ...[
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.star_rounded, size: 14, color: Colors.amber),
+                  const SizedBox(width: 4),
                   Text(
-                    extraInfo,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: AppColors.textSecondary,
+                    rating.toStringAsFixed(1),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (extraInfo != null) ...[
+                    const SizedBox(width: 6),
+                    Text(
+                      extraInfo,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
-            ),
+              ),
+            ] else if (extraInfo != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                extraInfo,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 4,
+              ),
+            ],
             if (action != null) ...[const SizedBox(height: 10), action],
           ],
         ),

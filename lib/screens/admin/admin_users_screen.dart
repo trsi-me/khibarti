@@ -64,6 +64,13 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.adminUsersTitle)),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showAddUserDialog(context, l10n),
+        icon: const Icon(Icons.person_add_rounded),
+        label: Text(l10n.adminAddUser),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+      ),
       body: RefreshIndicator(
         onRefresh: _load,
         color: AppColors.primary,
@@ -91,6 +98,8 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                   final phone = u['phone']?.toString();
                   final blocked =
                       u['is_blocked'] == 1 || u['is_blocked'] == true;
+                  final expertVerified = role == 'expert' &&
+                      (u['expert_verified'] == 1 || u['expert_verified'] == true);
 
                   final subLines = <String>[email];
                   if (phone != null && phone.isNotEmpty) subLines.add(phone);
@@ -131,6 +140,17 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                               MaterialTapTargetSize.shrinkWrap,
                           backgroundColor: Colors.orange.shade50,
                         ),
+                      if (expertVerified)
+                        Chip(
+                          avatar: Icon(Icons.verified_rounded, size: 16, color: Colors.teal.shade800),
+                          label: Text(
+                            l10n.expertVerifiedBadge,
+                            style: TextStyle(fontSize: 11, color: Colors.teal.shade900),
+                          ),
+                          padding: EdgeInsets.zero,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          backgroundColor: Colors.teal.shade50,
+                        ),
                     ],
                     onTap: () async {
                       if (uid < 1) return;
@@ -147,5 +167,143 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
               ),
       ),
     );
+  }
+
+  Future<void> _showAddUserDialog(BuildContext context, AppLocalizations l10n) async {
+    final adminId = AppState.currentUser?['id'] as int?;
+    if (adminId == null) return;
+
+    final nameCtrl = TextEditingController();
+    final emailCtrl = TextEditingController();
+    final passCtrl = TextEditingController();
+    final roleVN = ValueNotifier<int>(1);
+
+    try {
+      await showDialog<void>(
+        context: context,
+        builder: (dialogCtx) {
+          return ValueListenableBuilder<int>(
+            valueListenable: roleVN,
+            builder: (_, roleId, __) {
+              return AlertDialog(
+                title: Text(l10n.adminAddUser),
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        controller: nameCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.name,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        textDirection: TextDirection.rtl,
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: emailCtrl,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          labelText: l10n.email,
+                          hintText: l10n.adminAddUserHint,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: passCtrl,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: l10n.password,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<int>(
+                        value: roleId,
+                        decoration: InputDecoration(
+                          labelText: l10n.isAr ? 'الدور' : 'Role',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        items: [
+                          DropdownMenuItem(value: 1, child: Text(l10n.student)),
+                          DropdownMenuItem(value: 2, child: Text(l10n.expert)),
+                          DropdownMenuItem(value: 3, child: Text(l10n.company)),
+                        ],
+                        onChanged: (v) {
+                          if (v != null) roleVN.value = v;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogCtx),
+                    child: Text(l10n.cancel),
+                  ),
+                  FilledButton(
+                    onPressed: () async {
+                      final name = nameCtrl.text.trim();
+                      final email = emailCtrl.text.trim();
+                      final pass = passCtrl.text;
+                      if (name.isEmpty || email.isEmpty) {
+                        ScaffoldMessenger.of(dialogCtx).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              l10n.isAr ? 'الاسم والمعرّف مطلوبان' : 'Name and login id required',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      if (pass.length < 6) {
+                        ScaffoldMessenger.of(dialogCtx).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              l10n.isAr ? 'كلمة المرور 6 أحرف على الأقل' : 'Password at least 6 characters',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      try {
+                        await _api.adminCreateUser(
+                          adminId,
+                          email: email,
+                          password: pass,
+                          name: name,
+                          roleId: roleVN.value,
+                        );
+                        if (!dialogCtx.mounted) return;
+                        Navigator.pop(dialogCtx);
+                        if (context.mounted) {
+                          _load();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(l10n.adminUserSaved)),
+                          );
+                        }
+                      } on ApiException catch (e) {
+                        if (dialogCtx.mounted) {
+                          ScaffoldMessenger.of(dialogCtx).showSnackBar(SnackBar(content: Text(e.message)));
+                        }
+                      }
+                    },
+                    style: FilledButton.styleFrom(backgroundColor: AppColors.primary),
+                    child: Text(l10n.adminCreateUserSubmit),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      );
+    } finally {
+      nameCtrl.dispose();
+      emailCtrl.dispose();
+      passCtrl.dispose();
+      roleVN.dispose();
+    }
   }
 }

@@ -146,6 +146,17 @@ class AppLocalizations {
   String get privacyPolicy => isAr ? 'سياسة الخصوصية' : 'Privacy Policy';
   String get termsConditions =>
       isAr ? 'الشروط والأحكام' : 'Terms and Conditions';
+  String get privacyAndTerms =>
+      isAr ? 'الخصوصية والشروط' : 'Privacy & Terms';
+  String get agreeToTerms =>
+      isAr
+          ? 'أوافق على سياسة الخصوصية والشروط والأحكام'
+          : 'I agree to the Privacy Policy and Terms';
+  String get agreeToTermsError =>
+      isAr ? 'يجب الموافقة للمتابعة' : 'You must accept to continue';
+  String get companyExpertDisclaimer => isAr
+      ? 'الخبير يقدّم خدماته بشكل مستقل. التواصل المباشر يكون خارج وساطة الشركة ومسؤولية الأطراف.'
+      : 'Experts provide services independently. Direct contact is outside the company’s mediation.';
   String get logout => isAr ? 'تسجيل الخروج' : 'Logout';
   String get deleteAccount => isAr ? 'حذف الحساب' : 'Delete Account';
   String get endSession => isAr ? 'إنهاء الجلسة' : 'End Session';
@@ -223,6 +234,17 @@ class AppLocalizations {
   String get adminRoleChangeHint =>
       isAr ? 'تغيير الدور (طالب / خبير / شركة)' : 'Change role (student / expert / company)';
   String get createdAt => isAr ? 'تاريخ التسجيل' : 'Registered';
+  String get adminAddUser => isAr ? 'إضافة مستخدم' : 'Add user';
+  String get adminAddUserHint =>
+      isAr ? 'أي نص كمعرّف دخول (ليس شرطاً بريداً إلكترونياً)' : 'Any login identifier (not required to be an email)';
+  String get adminCreateUserSubmit => isAr ? 'إنشاء الحساب' : 'Create account';
+  String get expertVerifiedBadge =>
+      isAr ? 'خبير موثّق' : 'Verified expert';
+  String get expertVerifiedToggle =>
+      isAr ? 'تصريح / توثيق الخبير' : 'Expert verification badge';
+  String get expertVerifiedDesc => isAr
+      ? 'يظهر للجميع بجانب اسم الخبير كعلامة توثيق'
+      : 'Shows a verification badge next to the expert’s name';
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

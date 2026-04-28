@@ -3,6 +3,7 @@ import 'package:khibarti/app_state.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/services/certificate_service.dart';
+import 'package:khibarti/utils/session_format.dart';
 
 /// شاشة الجلسة — محادثة فقط (بدون مكالمة فيديو)
 class JoinSessionScreen extends StatefulWidget {
@@ -136,7 +137,7 @@ class _JoinSessionScreenState extends State<JoinSessionScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${widget.date} — ${widget.time}',
+                  formatSessionWhen(widget.date, widget.time, AppState.locale),
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                   textAlign: TextAlign.right,
                   textDirection: TextDirection.rtl,

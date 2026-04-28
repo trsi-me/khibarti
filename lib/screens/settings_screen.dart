@@ -114,14 +114,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () => setState(() => _notificationsOn = !_notificationsOn),
           ),
           _SettingsTile(
-            icon: Icons.privacy_tip_outlined,
-            title: l10n.privacyPolicy,
-            onTap: () => _showPolicy(context),
-          ),
-          _SettingsTile(
-            icon: Icons.description_outlined,
-            title: l10n.termsConditions,
-            onTap: () => _showTerms(context),
+            icon: Icons.gavel_outlined,
+            title: l10n.privacyAndTerms,
+            onTap: () => _showPrivacyAndTerms(context),
           ),
           const Divider(height: 32),
           SwitchListTile(
@@ -213,45 +208,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _rebuildApp();
   }
 
-  void _showPolicy(BuildContext context) {
+  void _showPrivacyAndTerms(BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context).privacyPolicy, style: const TextStyle(color: Color(0xFF1A1A1A))),
+        title: Text(AppLocalizations.of(context).privacyAndTerms, style: const TextStyle(color: Color(0xFF1A1A1A))),
         content: SingleChildScrollView(
           child: Text(
-            'سياسة الخصوصية لتطبيق خبرتي:\n\n'
-            '• نحن نحترم خصوصيتك ولا نشارك بياناتك مع أطراف ثالثة.\n'
-            '• جميع البيانات مخزنة محلياً على جهازك فقط.\n'
-            '• لا نستخدم أي خدمات خارجية أو سحابية.\n'
-            '• يمكنك حذف حسابك في أي وقت من الإعدادات.',
-            textAlign: TextAlign.right,
-            textDirection: TextDirection.rtl,
-            style: const TextStyle(color: Color(0xFF1A1A1A), fontSize: 16),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('إغلاق', style: TextStyle(color: Color(0xFF1B5E57), fontWeight: FontWeight.bold)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showTerms(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context).termsConditions, style: const TextStyle(color: Color(0xFF1A1A1A))),
-        content: SingleChildScrollView(
-          child: Text(
-            'الشروط والأحكام لتطبيق خبرتي:\n\n'
-            '• الاستخدام للأغراض التعليمية والتدريبية فقط.\n'
-            '• الالتزام بأداب الحوار والاحترام خلال الجلسات.\n'
-            '• التطبيق يعمل محلياً بدون إنترنت بعد التثبيت.\n'
-            '• إدارة التطبيق غير مسؤولة عن محتوى الجلسات.',
+            'سياسة الخصوصية والشروط والأحكام — تطبيق خبرتي\n\n'
+            'الخصوصية:\n'
+            '• نحترم خصوصيتك ولا نشارك بياناتك مع أطراف ثالثة دون مبرر.\n'
+            '• يمكنك حذف حسابك في أي وقت من الإعدادات.\n\n'
+            'الاستخدام:\n'
+            '• الاستخدام للأغراض التعليمية والتدريبية.\n'
+            '• الالتزام بآداب الحوار والاحترام خلال الجلسات.\n'
+            '• إدارة التطبيق غير مسؤولة عن مضمون الجلسات بين المستخدمين.',
             textAlign: TextAlign.right,
             textDirection: TextDirection.rtl,
             style: const TextStyle(color: Color(0xFF1A1A1A), fontSize: 16),

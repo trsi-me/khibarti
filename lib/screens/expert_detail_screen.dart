@@ -66,6 +66,7 @@ class _ExpertDetailScreenState extends State<ExpertDetailScreen> {
     final years = _expert!['years_experience'] as int? ?? 0;
     final sessionsCount = _expert!['sessions_count'] as int? ?? 0;
     final bio = _expert!['bio'] as String? ?? '';
+    final verified = _expert!['is_verified'] == 1 || _expert!['is_verified'] == true;
 
     return Scaffold(
       appBar: AppBar(title: Text(name)),
@@ -87,7 +88,26 @@ class _ExpertDetailScreenState extends State<ExpertDetailScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Text(name, style: Theme.of(context).textTheme.titleLarge),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                if (verified) ...[
+                  const SizedBox(width: 8),
+                  Tooltip(
+                    message: l10n.expertVerifiedBadge,
+                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28),
+                  ),
+                ],
+              ],
+            ),
             Text(
               specialty,
               style: TextStyle(color: Colors.grey.shade600, fontSize: 16),

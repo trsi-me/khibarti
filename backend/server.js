@@ -86,6 +86,34 @@ function migrateUsers() {
 }
 migrateUsers();
 
+/** توثيق الخبير (علامة مثل المنصات المعتمدة) — بعض الخبراء موثّقون وبعضهم لا */
+function migrateExpertVerified() {
+  try {
+    db.prepare('ALTER TABLE experts ADD COLUMN is_verified INTEGER DEFAULT 0').run();
+  } catch (_) { }
+  try {
+    const marked = db.prepare('SELECT COUNT(*) as c FROM experts WHERE is_verified = 1').get();
+    if (marked.c === 0) {
+      db.prepare('UPDATE experts SET is_verified = 1 WHERE id IN (1, 3, 5)').run();
+      db.prepare('UPDATE experts SET is_verified = 0 WHERE is_verified IS NULL').run();
+    }
+  } catch (_) { }
+}
+migrateExpertVerified();
+
+function ensureUserProfile(userId, roleName) {
+  if (roleName === 'student') {
+    const x = db.prepare('SELECT id FROM students WHERE user_id = ?').get(userId);
+    if (!x) db.prepare('INSERT INTO students (user_id) VALUES (?)').run(userId);
+  } else if (roleName === 'expert') {
+    const x = db.prepare('SELECT id FROM experts WHERE user_id = ?').get(userId);
+    if (!x) db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(userId, 'تخصص افتراضي');
+  } else if (roleName === 'company') {
+    const x = db.prepare('SELECT id FROM companies WHERE user_id = ?').get(userId);
+    if (!x) db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(userId, 'شركة');
+  }
+}
+
 // إشعار افتراضي عام — يظهر لجميع المستخدمين
 function migrateNotifications() {
   const hasGlobal = db.prepare('SELECT 1 FROM notifications WHERE user_id IS NULL LIMIT 1').get();
@@ -172,7 +200,7 @@ app.post('/api/auth/register', (req, res) => {
     const user = db.prepare('SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?').get(r.lastInsertRowid);
     delete user.password;
     if (roleId === 1) db.prepare('INSERT INTO students (user_id) VALUES (?)').run(user.id);
-    if (roleId === 2) db.prepare('INSERT INTO experts (user_id, specialty) VALUES (?, ?)').run(user.id, 'تخصص افتراضي');
+    if (roleId === 2) db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(user.id, 'تخصص افتراضي');
     if (roleId === 3) db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(user.id, 'شركة');
     res.json(user);
   } catch (e) {
@@ -448,11 +476,43 @@ app.get('/api/admin/users', (req, res) => {
   try {
     if (requireAdmin(req, res) == null) return;
     const rows = db.prepare(`
-      SELECT u.id, u.email, u.name, u.created_at, u.phone, COALESCE(u.is_blocked, 0) as is_blocked, r.name as role_name
+      SELECT u.id, u.email, u.name, u.created_at, u.phone, COALESCE(u.is_blocked, 0) as is_blocked, r.name as role_name,
+        COALESCE(e.is_verified, 0) as expert_verified
       FROM users u JOIN roles r ON u.role_id = r.id
+      LEFT JOIN experts e ON e.user_id = u.id
       ORDER BY u.id DESC
     `).all();
     res.json(rows);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+/** إنشاء مستخدم من لوحة الإدارة — أي نص كبريد (بدون قيود شكل البريد) */
+app.post('/api/admin/users', (req, res) => {
+  try {
+    if (requireAdmin(req, res) == null) return;
+    const body = req.body || {};
+    const email = typeof body.email === 'string' ? body.email.trim() : '';
+    const password = typeof body.password === 'string' ? body.password : '';
+    const name = typeof body.name === 'string' ? body.name.trim() : '';
+    const roleId = parseInt(body.roleId, 10);
+    if (!email) return res.status(400).json({ error: 'البريد أو المعرف مطلوب' });
+    if (!name) return res.status(400).json({ error: 'الاسم مطلوب' });
+    if (password.length < 6) return res.status(400).json({ error: 'كلمة المرور 6 أحرف على الأقل' });
+    if (isNaN(roleId) || roleId < 1) return res.status(400).json({ error: 'دور غير صالح' });
+    const roleRow = db.prepare('SELECT name FROM roles WHERE id = ?').get(roleId);
+    if (!roleRow) return res.status(400).json({ error: 'دور غير موجود' });
+    if (roleRow.name === 'admin') return res.status(403).json({ error: 'لا يمكن إنشاء حساب مدير من هنا' });
+    const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+    if (exists) return res.status(400).json({ error: 'هذا المعرف مستخدم مسبقاً' });
+    const r = db.prepare('INSERT INTO users (email, password, role_id, name) VALUES (?, ?, ?, ?)').run(email, password, roleId, name);
+    const user = db.prepare('SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?').get(r.lastInsertRowid);
+    delete user.password;
+    if (roleId === 1) db.prepare('INSERT INTO students (user_id) VALUES (?)').run(user.id);
+    if (roleId === 2) db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(user.id, 'تخصص افتراضي');
+    if (roleId === 3) db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(user.id, 'شركة');
+    res.json(user);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -465,8 +525,11 @@ app.get('/api/admin/user/:userId', (req, res) => {
     if (isNaN(uid) || uid < 1) return res.status(400).json({ error: 'معرّف غير صالح' });
     const row = db.prepare(`
       SELECT u.id, u.email, u.name, u.created_at, u.role_id, u.phone, u.country, u.avatar,
-        COALESCE(u.is_blocked, 0) as is_blocked, r.name as role_name
-      FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?
+        COALESCE(u.is_blocked, 0) as is_blocked, r.name as role_name,
+        COALESCE(e.is_verified, 0) as expert_verified
+      FROM users u JOIN roles r ON u.role_id = r.id
+      LEFT JOIN experts e ON e.user_id = u.id
+      WHERE u.id = ?
     `).get(uid);
     if (!row) return res.status(404).json({ error: 'غير موجود' });
     res.json(row);
@@ -482,7 +545,7 @@ app.patch('/api/admin/user/:userId', (req, res) => {
     const targetId = parseInt(req.params.userId, 10);
     if (isNaN(targetId) || targetId < 1) return res.status(400).json({ error: 'معرّف غير صالح' });
     const body = req.body || {};
-    const { name, email, roleId, password, phone, country, isBlocked } = body;
+    const { name, email, roleId, password, phone, country, isBlocked, expertVerified } = body;
 
     if (targetId === adminId && (isBlocked === true || isBlocked === 1)) {
       return res.status(400).json({ error: 'لا يمكنك تقييد حسابك' });
@@ -502,6 +565,7 @@ app.patch('/api/admin/user/:userId', (req, res) => {
         if (adminCount <= 1) return res.status(400).json({ error: 'لا يمكن تغيير دور آخر مدير' });
       }
       db.prepare('UPDATE users SET role_id = ? WHERE id = ?').run(rid, targetId);
+      ensureUserProfile(targetId, roleRow.name);
     }
 
     if (name !== undefined) db.prepare('UPDATE users SET name = ? WHERE id = ?').run(String(name).trim(), targetId);
@@ -521,10 +585,21 @@ app.patch('/api/admin/user/:userId', (req, res) => {
       db.prepare('UPDATE users SET is_blocked = ? WHERE id = ?').run(b ? 1 : 0, targetId);
     }
 
+    if (expertVerified !== undefined) {
+      const exp = db.prepare('SELECT id FROM experts WHERE user_id = ?').get(targetId);
+      if (exp) {
+        const v = expertVerified === true || expertVerified === 1 || expertVerified === '1';
+        db.prepare('UPDATE experts SET is_verified = ? WHERE user_id = ?').run(v ? 1 : 0, targetId);
+      }
+    }
+
     const row = db.prepare(`
       SELECT u.id, u.email, u.name, u.created_at, u.role_id, u.phone, u.country, u.avatar,
-        COALESCE(u.is_blocked, 0) as is_blocked, r.name as role_name
-      FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?
+        COALESCE(u.is_blocked, 0) as is_blocked, r.name as role_name,
+        COALESCE(e.is_verified, 0) as expert_verified
+      FROM users u JOIN roles r ON u.role_id = r.id
+      LEFT JOIN experts e ON e.user_id = u.id
+      WHERE u.id = ?
     `).get(targetId);
     res.json(row);
   } catch (e) {

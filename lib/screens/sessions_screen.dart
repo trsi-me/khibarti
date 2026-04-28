@@ -6,6 +6,7 @@ import 'package:khibarti/screens/join_session_screen.dart';
 import 'package:khibarti/services/certificate_service.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/session_format.dart';
 
 class SessionsScreen extends StatefulWidget {
   const SessionsScreen({super.key});
@@ -238,7 +239,14 @@ class _SessionList extends StatelessWidget {
       itemBuilder: (context, i) {
         final s = sessions[i];
         final expertName = s['expert_name'] as String? ?? '';
-        final dateTime = '${s['scheduled_date']} - ${s['scheduled_time']}';
+        final dateTime = [
+          formatSessionWhen(
+            s['scheduled_date'] as String? ?? '',
+            s['scheduled_time'] as String? ?? '',
+            AppState.locale,
+          ),
+          s['specialty'] as String? ?? '',
+        ].where((e) => e.trim().isNotEmpty).join('\n');
         List<Widget> actions = [];
         if (isUpcoming && !isCancelled) {
           actions = [
