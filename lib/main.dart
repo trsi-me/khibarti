@@ -6,6 +6,8 @@ import 'package:khibarti/services/session_service.dart';
 
 import 'url_strategy_stub.dart'
     if (dart.library.html) 'url_strategy_web.dart' as url_strategy;
+import 'web_location_path_stub.dart'
+    if (dart.library.html) 'web_location_path_web.dart' as web_location_path;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,9 +15,7 @@ void main() async {
 
   var adminFlavor = false;
   if (kIsWeb) {
-    final path = Uri.base.path;
-    adminFlavor = path == '/admin' ||
-        path.startsWith('/admin/'); // مثل /admin أي شيء تحت نفس المسار
+    adminFlavor = web_location_path.webUrlIndicatesAdminFlavor();
   }
   AppState.adminFlavor = adminFlavor;
 
