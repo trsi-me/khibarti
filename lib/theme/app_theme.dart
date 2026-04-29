@@ -37,6 +37,21 @@ class AppTheme {
         ),
         iconTheme: const IconThemeData(color: AppColors.onPrimary),
       ),
+      // TabBar داخل AppBar على خلفية primary — بدون هذا يظهر نص التبويبات بلون منخفض التباين
+      tabBarTheme: TabBarThemeData(
+        labelColor: Colors.white,
+        unselectedLabelColor: const Color(0xC7FFFFFF),
+        indicatorColor: Colors.white,
+        dividerColor: Colors.transparent,
+        labelStyle: GoogleFonts.ibmPlexSansArabic(
+          fontSize: 14 * scale,
+          fontWeight: FontWeight.w700,
+        ),
+        unselectedLabelStyle: GoogleFonts.ibmPlexSansArabic(
+          fontSize: 14 * scale,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       cardTheme: CardThemeData(
         color: AppColors.cardBg,
         elevation: 1,

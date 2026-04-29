@@ -33,22 +33,40 @@ class _ExpertDetailScreenState extends State<ExpertDetailScreen> {
     if (user == null) return;
     final studentId = await _api.getStudentIdByUserId(user['id'] as int);
     if (studentId == null) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('يجب أن تكون طالباً لحجز جلسة')));
       return;
     }
-    final now = DateTime.now();
+    if (!mounted) return;
+    final initialDay = DateTime.now().add(const Duration(days: 1));
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDay,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (pickedDate == null || !mounted) return;
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: const TimeOfDay(hour: 10, minute: 0),
+    );
+    if (pickedTime == null || !mounted) return;
     final date =
-        '${now.year}-${(now.month).toString().padLeft(2, '0')}-${(now.day + 3).toString().padLeft(2, '0')}';
-    final time = '10:00';
-    await _api.bookSession(widget.expertId, studentId, date, time);
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('تم حجز الجلسة بنجاح')));
-      Navigator.pop(context);
+        '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
+    final time =
+        '${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}';
+    final id = await _api.bookSession(widget.expertId, studentId, date, time);
+    if (!mounted) return;
+    if (id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تعذر إتمام الحجز — تحقق من الاتصال بالسيرفر')),
+      );
+      return;
     }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('تم حجز الجلسة بنجاح')));
+    Navigator.pop(context);
   }
 
   @override

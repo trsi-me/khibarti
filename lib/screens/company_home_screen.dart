@@ -5,7 +5,6 @@ import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
 import 'package:khibarti/screens/notifications_screen.dart';
-
 /// واجهة الشركة فقط — نظرة عامة، إحصائيات المنصة
 class CompanyHomeScreen extends StatefulWidget {
   const CompanyHomeScreen({super.key});
@@ -17,6 +16,7 @@ class CompanyHomeScreen extends StatefulWidget {
 class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
   final _api = ApiService.instance;
   List<Map<String, dynamic>> _experts = [];
+  List<Map<String, dynamic>> _partnerExperts = [];
   List<Map<String, dynamic>> _notifications = [];
 
   @override
@@ -29,10 +29,12 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
     final userId = AppState.currentUser?['id'] as int?;
     if (userId == null) return;
     final experts = await _api.getExperts();
+    final partners = await _api.getExperts(audience: 'company');
     final notifications = await _api.getNotificationsForUser(userId);
     if (mounted) {
       setState(() {
         _experts = experts;
+        _partnerExperts = partners;
         _notifications = notifications;
       });
     }
@@ -73,10 +75,24 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
 
   Widget _buildStats(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return KhibartiCard.stat(
-      icon: Icons.people_outline,
-      value: '${_experts.length}',
-      label: l10n.expertsCount,
+    return Row(
+      children: [
+        Expanded(
+          child: KhibartiCard.stat(
+            icon: Icons.school_outlined,
+            value: '${_experts.length}',
+            label: l10n.isAr ? 'خبراء المنصة' : 'Platform experts',
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: KhibartiCard.stat(
+            icon: Icons.handshake_outlined,
+            value: '${_partnerExperts.length}',
+            label: l10n.isAr ? 'شركاء الشركة' : 'Company partners',
+          ),
+        ),
+      ],
     );
   }
 

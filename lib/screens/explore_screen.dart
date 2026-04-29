@@ -18,7 +18,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
   List<String> _specialties = [];
   String _selectedSpecialty = 'الكل';
   int _minYears = 0;
-  double _minRating = 0;
 
   @override
   void initState() {
@@ -46,7 +45,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
       search: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
       specialty: _selectedSpecialty == 'الكل' ? null : _selectedSpecialty,
       minYears: _minYears > 0 ? _minYears : null,
-      minRating: _minRating > 0 ? _minRating : null,
     );
     setState(() => _experts = experts);
   }
@@ -122,20 +120,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
               onSelected: (_) {
                 setState(() {
                   _minYears = _minYears == 0 ? 5 : (_minYears == 5 ? 10 : 0);
-                  _loadExperts();
-                });
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: FilterChip(
-              label: Text('${l10n.filterRating}: $_minRating+'),
-              selected: _minRating > 0,
-              onSelected: (_) {
-                setState(() {
-                  _minRating = _minRating == 0 ? 4.0 : 0;
                   _loadExperts();
                 });
               },

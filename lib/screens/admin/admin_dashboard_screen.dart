@@ -359,6 +359,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         return l10n.expert;
       case 'company':
         return l10n.company;
+      case 'company_manager':
+        return l10n.companyManager;
+      case 'company_delegate':
+        return l10n.companyDelegate;
       case 'admin':
         return l10n.roleAdmin;
       default:

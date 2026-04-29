@@ -7,6 +7,7 @@ import 'package:khibarti/screens/notifications_screen.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
 import 'package:khibarti/utils/session_format.dart';
+import 'package:khibarti/screens/expert_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,7 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadData() async {
     final userId = AppState.currentUser?['id'] as int?;
     if (userId == null) return;
-    final experts = await _api.getExperts();
+    final q = _searchController.text.trim();
+    final experts = await _api.getExperts(
+      search: q.isEmpty ? null : q,
+    );
     final sessions = await _api.getSessionsForUser(userId, status: 'upcoming');
     final notifications = await _api.getNotificationsForUser(userId);
     if (mounted) {
@@ -139,12 +143,22 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: _experts.length,
         itemBuilder: (context, i) {
           final e = _experts[i];
+          final expertId = e['id'] as int?;
           return _ExpertCard(
             name: e['name'] as String? ?? '',
             specialty: e['specialty'] as String? ?? '',
             rating: ((e['rating'] ?? 0) as num).toDouble(),
             isVerified: (e['is_verified'] == 1 || e['is_verified'] == true),
-            onTap: () {},
+            onTap: expertId == null
+                ? () {}
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ExpertDetailScreen(expertId: expertId),
+                      ),
+                    ).then((_) => _loadData());
+                  },
           );
         },
       ),

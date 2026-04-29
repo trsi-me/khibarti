@@ -23,8 +23,8 @@ String formatSessionWhen(
   }
   final isAr = locale.languageCode == 'ar';
   final loc = isAr ? 'ar' : 'en';
-  final weekday = DateFormat.EEEE(loc).format(d);
+  // yMMMEd يتضمن يوم الأسبوع — لا نكرره
   final datePart = DateFormat.yMMMEd(loc).format(d);
-  if (time.isEmpty) return '$weekday • $datePart';
-  return '$weekday • $datePart • $time';
+  if (time.isEmpty) return datePart;
+  return '$datePart • $time';
 }

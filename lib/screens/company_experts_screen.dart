@@ -33,7 +33,7 @@ class _CompanyExpertsScreenState extends State<CompanyExpertsScreen> {
   }
 
   Future<void> _loadSpecialties() async {
-    final s = await _api.getSpecialties();
+    final s = await _api.getSpecialties(audience: 'company');
     setState(() {
       _specialties = ['الكل', ...s];
       if (!_specialties.contains(_selectedSpecialty)) _selectedSpecialty = 'الكل';
@@ -42,6 +42,7 @@ class _CompanyExpertsScreenState extends State<CompanyExpertsScreen> {
 
   Future<void> _loadExperts() async {
     final experts = await _api.getExperts(
+      audience: 'company',
       search: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
       specialty: _selectedSpecialty == 'الكل' ? null : _selectedSpecialty,
     );

@@ -1291,7 +1291,7 @@ class AppLocalizations {
   bool get isAr => locale.languageCode == 'ar';
 
   // أمثلة: welcomeTitle, student, expert, company, login, signUp, email, password, navHome, navExplore, navSessions, navProfile, navSettings, ...
-  String get welcomeTitle => isAr ? 'مرحباً بك في خبرتي' : 'Welcome to Khibarti';
+  String get welcomeTitle => isAr ? 'اختر نوع الحساب' : 'Choose your account type';
   String get login => isAr ? 'تسجيل الدخول' : 'LOGIN';
   String get navHome => isAr ? 'الرئيسية' : 'Home';
   String get navExplore => isAr ? 'استكشف الخبراء' : 'Explore Experts';

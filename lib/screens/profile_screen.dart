@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:khibarti/app_state.dart';
 import 'package:khibarti/services/api_service.dart' show ApiService, ApiException;
+import 'package:khibarti/services/session_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/edit_profile_screen.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
@@ -21,13 +22,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _user = AppState.currentUser;
+    _refreshUserFromServer();
+  }
+
+  Future<void> _refreshUserFromServer() async {
+    final id = AppState.currentUser?['id'] as int?;
+    if (id == null) return;
+    final fresh = await _api.getUserById(id);
+    if (fresh != null && mounted) {
+      AppState.currentUser = fresh;
+      await SessionService.saveUser(fresh);
+      setState(() => _user = fresh);
+    }
   }
 
   void _openEditProfile() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const EditProfileScreen()),
-    ).then((_) => setState(() => _user = AppState.currentUser));
+    ).then((_) {
+      setState(() => _user = AppState.currentUser);
+      _refreshUserFromServer();
+    });
   }
 
   @override
@@ -39,6 +55,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final country = _user?['country'] as String? ?? l10n.saudiArabia;
     final roleName = _user?['role_name'] as String? ?? '';
     final avatarBase64 = _user?['avatar'] as String?;
+    final expertVerified = roleName == 'expert' &&
+        (_user?['expert_verified'] == 1 || _user?['expert_verified'] == true);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profileTitle)),
@@ -78,7 +96,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Text(name, style: Theme.of(context).textTheme.titleLarge),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(name, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+                ),
+                if (expertVerified) ...[
+                  const SizedBox(width: 8),
+                  Tooltip(
+                    message: l10n.expertVerifiedBadge,
+                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28),
+                  ),
+                ],
+              ],
+            ),
             Text(email, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
             if (roleName.isNotEmpty)
               Padding(
@@ -181,6 +214,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return l10n.expert;
       case 'company':
         return l10n.company;
+      case 'company_manager':
+        return l10n.companyManager;
+      case 'company_delegate':
+        return l10n.companyDelegate;
       case 'admin':
         return l10n.roleAdmin;
       default:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khibarti/app_state.dart';
 import 'package:khibarti/services/api_service.dart';
+import 'package:khibarti/services/session_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/join_session_screen.dart';
 import 'package:khibarti/screens/expert_chat_screen.dart';
@@ -17,17 +18,30 @@ class ExpertHomeScreen extends StatefulWidget {
   State<ExpertHomeScreen> createState() => _ExpertHomeScreenState();
 }
 
-class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
+class _ExpertHomeScreenState extends State<ExpertHomeScreen> with WidgetsBindingObserver {
   final _api = ApiService.instance;
   List<Map<String, dynamic>> _sessions = [];
   List<Map<String, dynamic>> _notifications = [];
   List<Map<String, dynamic>> _conversations = [];
   Map<String, dynamic>? _expertProfile;
+  Map<String, dynamic>? _partnerDirStatus;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadData();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _loadData();
   }
 
   Future<void> _loadData() async {
@@ -36,13 +50,12 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
     final sessions = await _api.getSessionsForUser(userId, status: 'upcoming');
     final notifications = await _api.getNotificationsForUser(userId);
     final conversations = await _api.getConversations(userId);
-    final experts = await _api.getExperts();
-    Map<String, dynamic>? myExpert;
-    for (final e in experts) {
-      if ((e['user_id'] as int?) == userId) {
-        myExpert = e;
-        break;
-      }
+    final myExpert = await _api.getExpertByUserId(userId);
+    final partnerDir = await _api.getExpertPartnerDirectoryStatus(userId);
+    if (myExpert != null && AppState.currentUser != null) {
+      final ev = myExpert['is_verified'] == 1 || myExpert['is_verified'] == true;
+      AppState.currentUser!['expert_verified'] = ev ? 1 : 0;
+      await SessionService.saveUser(AppState.currentUser!);
     }
     if (mounted) {
       setState(() {
@@ -50,7 +63,21 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
         _notifications = notifications;
         _conversations = conversations;
         _expertProfile = myExpert;
+        _partnerDirStatus = partnerDir;
       });
+    }
+  }
+
+  Future<void> _submitPartnerDirectoryRequest(AppLocalizations l10n) async {
+    final userId = AppState.currentUser?['id'] as int?;
+    if (userId == null) return;
+    final err = await _api.submitExpertPartnerDirectoryRequest(userId);
+    if (!mounted) return;
+    if (err == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.expertPartnerDirRequestSent)));
+      _loadData();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err)));
     }
   }
 
@@ -75,6 +102,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
     final userName = AppState.currentUser?['name'] as String? ?? '';
     final rating = ((_expertProfile?['rating'] ?? 0) as num).toDouble();
     final sessionsCount = _expertProfile?['sessions_count'] as int? ?? 0;
+    final verified = _expertProfile?['is_verified'] == 1 || _expertProfile?['is_verified'] == true;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.expertDashboard)),
@@ -83,12 +111,25 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${l10n.welcome}، $userName',
-              style: Theme.of(context).textTheme.titleLarge,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${l10n.welcome}، $userName',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+                if (verified)
+                  Tooltip(
+                    message: l10n.expertVerifiedBadge,
+                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28),
+                  ),
+              ],
             ),
             const SizedBox(height: 20),
             _buildStats(context, rating, sessionsCount),
+            const SizedBox(height: 16),
+            _buildPartnerDirectoryCard(context, l10n),
             const SizedBox(height: 20),
             _buildSectionTitle(l10n.mySessionsAsExpert),
             const SizedBox(height: 8),
@@ -120,6 +161,72 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
     );
   }
 
+  Widget _buildPartnerDirectoryCard(BuildContext context, AppLocalizations l10n) {
+    final s = _partnerDirStatus;
+    if (s == null) return const SizedBox.shrink();
+    final inDir = s['inDirectory'] == true || s['inDirectory'] == 1;
+    final rs = s['requestStatus'] as String?;
+    return Card(
+      elevation: 0,
+      color: AppColors.primary.withOpacity(0.06),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l10n.expertPartnerDirCardTitle,
+              textDirection: TextDirection.rtl,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            if (inDir)
+              Text(
+                l10n.expertPartnerDirListed,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(color: Colors.teal.shade800, fontWeight: FontWeight.w600),
+              )
+            else if (rs == 'pending')
+              Text(
+                l10n.expertPartnerDirPending,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+              )
+            else if (rs == 'rejected') ...[
+              Text(
+                l10n.expertPartnerDirRejected,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: () => _submitPartnerDirectoryRequest(l10n),
+                icon: const Icon(Icons.refresh_rounded, size: 20),
+                label: Text(l10n.expertPartnerDirRequestCta),
+              ),
+            ] else ...[
+              Text(
+                l10n.expertPartnerDirIntro,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 10),
+              FilledButton.tonalIcon(
+                onPressed: () => _submitPartnerDirectoryRequest(l10n),
+                icon: const Icon(Icons.handshake_outlined, size: 20),
+                label: Text(l10n.expertPartnerDirRequestCta),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildStats(BuildContext context, double rating, int sessionsCount) {
     final l10n = AppLocalizations.of(context);
     return Row(
@@ -136,7 +243,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
         const SizedBox(width: 12),
         Expanded(
           child: KhibartiCard.stat(
-            icon: Icons.video_call_rounded,
+            icon: Icons.event_available_rounded,
             value: '$sessionsCount',
             label: l10n.totalSessions,
           ),
@@ -155,7 +262,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> {
   Widget _buildSessions(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     if (_sessions.isEmpty) {
-      return KhibartiCard.empty(message: l10n.noExpertSessions, icon: Icons.video_call_rounded);
+      return KhibartiCard.empty(message: l10n.noExpertSessions, icon: Icons.event_available_rounded);
     }
     return Column(
       children: _sessions.map((s) {

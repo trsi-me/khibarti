@@ -269,12 +269,13 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                     ),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<int>(
-                      value: _roleId != null && [1, 2, 3].contains(_roleId) ? _roleId : 1,
+                      value: _roleId != null && [1, 2, 3, 5].contains(_roleId) ? _roleId : 1,
                       decoration: _fieldDec(l10n.isAr ? 'الدور' : 'Role'),
                       items: [
                         DropdownMenuItem(value: 1, child: Text(l10n.student)),
                         DropdownMenuItem(value: 2, child: Text(l10n.expert)),
                         DropdownMenuItem(value: 3, child: Text(l10n.company)),
+                        DropdownMenuItem(value: 5, child: Text(l10n.companyManager)),
                       ],
                       onChanged: (v) {
                         if (v != null) setState(() => _roleId = v);

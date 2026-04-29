@@ -5,6 +5,7 @@ import 'package:khibarti/main_app.dart';
 import 'package:khibarti/screens/welcome_screen.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/services/session_service.dart';
+import 'package:khibarti/theme/app_theme.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool isSignUp;
@@ -33,6 +34,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _api = ApiService.instance;
   bool _loading = false;
   bool _acceptedTerms = false;
+  bool _acceptedDataRecording = false;
+
+  bool get _needsConsent {
+    if (widget.adminOnly) return false;
+    final r = widget.roleId;
+    return r == 1 || r == 2 || r == 3;
+  }
 
   @override
   void dispose() {
@@ -43,13 +51,24 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  bool _validateConsents() {
+    final l10n = AppLocalizations.of(context);
+    if (!_needsConsent) return true;
+    if (!_acceptedTerms) {
+      _showSnack(l10n.agreeToTermsError);
+      return false;
+    }
+    if (!_acceptedDataRecording) {
+      _showSnack(l10n.agreeToDataRecordingError);
+      return false;
+    }
+    return true;
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final signUp = widget.adminOnly ? false : widget.isSignUp;
-    if (signUp && !_acceptedTerms) {
-      _showSnack(AppLocalizations.of(context).agreeToTermsError);
-      return;
-    }
+    if (!_validateConsents()) return;
     setState(() => _loading = true);
 
     if (signUp) {
@@ -189,16 +208,56 @@ class _LoginScreenState extends State<LoginScreen> {
                     textDirection: TextDirection.ltr,
                     validator: (v) => v != _passwordController.text ? 'كلمتا المرور غير متطابقتين' : null,
                   ),
-                  const SizedBox(height: 8),
-                  CheckboxListTile(
-                    value: _acceptedTerms,
-                    onChanged: (v) => setState(() => _acceptedTerms = v ?? false),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      AppLocalizations.of(context).agreeToTerms,
-                      style: const TextStyle(fontSize: 14, height: 1.3),
-                      textDirection: TextDirection.rtl,
+                ],
+                if (_needsConsent) ...[
+                  const SizedBox(height: 12),
+                  Theme(
+                    data: Theme.of(context).copyWith(
+                      checkboxTheme: CheckboxThemeData(
+                        fillColor: WidgetStateProperty.resolveWith((states) {
+                          if (states.contains(WidgetState.selected)) {
+                            return AppColors.primary;
+                          }
+                          return null;
+                        }),
+                        side: const BorderSide(color: AppColors.primary, width: 1.5),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        CheckboxListTile(
+                          value: _acceptedTerms,
+                          onChanged: (v) => setState(() => _acceptedTerms = v ?? false),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            l10n.agreeToTerms,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              height: 1.35,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                            textDirection: TextDirection.rtl,
+                          ),
+                        ),
+                        CheckboxListTile(
+                          value: _acceptedDataRecording,
+                          onChanged: (v) => setState(() => _acceptedDataRecording = v ?? false),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            l10n.agreeToDataRecording,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              height: 1.35,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                            textDirection: TextDirection.rtl,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

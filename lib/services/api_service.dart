@@ -82,14 +82,17 @@ class ApiService {
     }
   }
 
+  /// [audience] `student` (افتراضي) للطلاب، `company` لقائمة شركاء الشركة فقط
   Future<List<Map<String, dynamic>>> getExperts({
     String? search,
     String? specialty,
     int? minYears,
     double? minRating,
+    String? audience,
   }) async {
     try {
       final q = <String>[];
+      if (audience != null && audience.isNotEmpty) q.add('audience=$audience');
       if (search != null && search.isNotEmpty) q.add('search=$search');
       if (specialty != null && specialty != 'الكل')
         q.add('specialty=$specialty');
@@ -106,15 +109,32 @@ class ApiService {
     }
   }
 
-  Future<List<String>> getSpecialties() async {
+  Future<List<String>> getSpecialties({String? audience}) async {
     try {
+      final q = audience != null && audience.isNotEmpty ? '?audience=$audience' : '';
       final r = await http
-          .get(Uri.parse('$_base/api/experts/specialties'))
+          .get(Uri.parse('$_base/api/experts/specialties$q'))
           .timeout(const Duration(seconds: 5));
       if (r.statusCode == 200) return List<String>.from(jsonDecode(r.body));
       return [];
     } catch (_) {
       return [];
+    }
+  }
+
+  Future<Map<String, dynamic>?> getExpertByUserId(int userId) async {
+    try {
+      final r = await http
+          .get(Uri.parse('$_base/api/experts/by-user/$userId'))
+          .timeout(const Duration(seconds: 5));
+      if (r.statusCode == 200) {
+        final data = jsonDecode(r.body);
+        if (data == null) return null;
+        return Map<String, dynamic>.from(data as Map);
+      }
+      return null;
+    } catch (_) {
+      return null;
     }
   }
 
@@ -155,6 +175,168 @@ class ApiService {
       return null;
     } catch (_) {
       return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getCompanyDelegates(int ownerUserId) async {
+    try {
+      final r = await http
+          .get(
+            Uri.parse('$_base/api/company/delegates?ownerUserId=$ownerUserId'),
+          )
+          .timeout(const Duration(seconds: 5));
+      if (r.statusCode == 200) {
+        return List<Map<String, dynamic>>.from(jsonDecode(r.body));
+      }
+      return [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>?> createCompanyDelegate({
+    required int ownerUserId,
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    try {
+      final r = await http
+          .post(
+            Uri.parse('$_base/api/company/delegates'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'ownerUserId': ownerUserId,
+              'email': email,
+              'password': password,
+              'name': name,
+            }),
+          )
+          .timeout(const Duration(seconds: 8));
+      if (r.statusCode == 200) {
+        return jsonDecode(r.body) as Map<String, dynamic>;
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String?> deleteCompanyDelegate({
+    required int ownerUserId,
+    required int delegateId,
+  }) async {
+    try {
+      final r = await http
+          .delete(
+            Uri.parse(
+              '$_base/api/company/delegates/$delegateId?ownerUserId=$ownerUserId',
+            ),
+          )
+          .timeout(const Duration(seconds: 5));
+      if (r.statusCode == 200) return null;
+      if (r.statusCode == 404) return 'not_found';
+      try {
+        final m = jsonDecode(r.body);
+        if (m is Map && m['error'] != null) return m['error'].toString();
+      } catch (_) {}
+      return 'error';
+    } catch (_) {
+      return 'error';
+    }
+  }
+
+  Future<Map<String, dynamic>?> getExpertPartnerDirectoryStatus(int expertUserId) async {
+    try {
+      final r = await http
+          .get(
+            Uri.parse(
+              '$_base/api/experts/partner-directory-request/me?expertUserId=$expertUserId',
+            ),
+          )
+          .timeout(const Duration(seconds: 5));
+      if (r.statusCode == 200) {
+        return Map<String, dynamic>.from(jsonDecode(r.body) as Map);
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String?> submitExpertPartnerDirectoryRequest(int expertUserId) async {
+    try {
+      final r = await http
+          .post(
+            Uri.parse('$_base/api/experts/partner-directory-request'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'expertUserId': expertUserId}),
+          )
+          .timeout(const Duration(seconds: 6));
+      if (r.statusCode == 200) {
+        return null;
+      }
+      try {
+        final m = jsonDecode(r.body);
+        if (m is Map && m['error'] != null) {
+          return m['error'].toString();
+        }
+      } catch (_) {}
+      return 'error';
+    } catch (_) {
+      return 'error';
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getCompanyPartnerRequests(
+    int officerUserId, {
+    String status = 'pending',
+  }) async {
+    try {
+      final r = await http
+          .get(
+            Uri.parse(
+              '$_base/api/company/partner-requests?officerUserId=$officerUserId&status=$status',
+            ),
+          )
+          .timeout(const Duration(seconds: 5));
+      if (r.statusCode == 200) {
+        return List<Map<String, dynamic>>.from(jsonDecode(r.body));
+      }
+      return [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<String?> decideCompanyPartnerRequest({
+    required int officerUserId,
+    required int requestId,
+    required bool approve,
+  }) async {
+    try {
+      final r = await http
+          .patch(
+            Uri.parse('$_base/api/company/partner-requests/$requestId'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'officerUserId': officerUserId,
+              'decision': approve ? 'approve' : 'reject',
+            }),
+          )
+          .timeout(const Duration(seconds: 6));
+      if (r.statusCode == 200) {
+        return null;
+      }
+      try {
+        final m = jsonDecode(r.body);
+        if (m is Map && m['error'] != null) {
+          return m['error'].toString();
+        }
+      } catch (_) {}
+      return 'error';
+    } catch (_) {
+      return 'error';
     }
   }
 

@@ -34,7 +34,7 @@ class CertificateService {
               pw.SizedBox(height: 16),
               pw.Text('تاريخ الجلسة: $sessionDate', style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 32),
-              pw.Text('تطبيق خبرتي - Khibarti', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Khibarti', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
             ],
           ),
         ),

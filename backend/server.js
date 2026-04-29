@@ -15,7 +15,7 @@ function initDB() {
   db.exec(`
     CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL UNIQUE);
     CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, role_id INTEGER NOT NULL, name TEXT NOT NULL, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
-    CREATE TABLE IF NOT EXISTS experts (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, specialty TEXT NOT NULL, years_experience INTEGER DEFAULT 0, rating REAL DEFAULT 0, sessions_count INTEGER DEFAULT 0, bio TEXT);
+    CREATE TABLE IF NOT EXISTS experts (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, specialty TEXT NOT NULL, years_experience INTEGER DEFAULT 0, rating REAL DEFAULT 0, sessions_count INTEGER DEFAULT 0, bio TEXT, list_in_student_app INTEGER DEFAULT 1, list_in_company_directory INTEGER DEFAULT 0);
     CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL UNIQUE, university TEXT, major TEXT, graduation_year TEXT);
     CREATE TABLE IF NOT EXISTS companies (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL UNIQUE, company_name TEXT NOT NULL, industry TEXT);
     CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY AUTOINCREMENT, expert_id INTEGER NOT NULL, student_id INTEGER NOT NULL, scheduled_date TEXT NOT NULL, scheduled_time TEXT NOT NULL, status TEXT DEFAULT 'upcoming', created_at TEXT DEFAULT CURRENT_TIMESTAMP);
@@ -39,39 +39,39 @@ function initDB() {
         ('expert4@khibarti.com', '123456', 2, 'فاطمة عمر'),
         ('expert5@khibarti.com', '123456', 2, 'عمر يوسف'),
         ('expert6@khibarti.com', '123456', 2, 'نورة أحمد');
-      INSERT INTO students (user_id, university, major, graduation_year) VALUES (1, 'جامعة الملك سعود', 'علوم الحاسب', '2026');
-      INSERT INTO experts (user_id, specialty, years_experience, rating, sessions_count, bio) VALUES 
-        (2, 'تطوير البرمجيات', 12, 4.8, 42, 'خبير في تطوير التطبيقات'),
-        (4, 'التسويق الرقمي', 8, 4.9, 67, 'خبيرة تسويق'),
-        (5, 'إدارة الأعمال', 15, 4.6, 28, 'خبير إدارة'),
-        (6, 'التصميم الجرافيكي', 6, 4.7, 35, 'مصممة جرافيك'),
-        (7, 'الذكاء الاصطناعي', 10, 4.9, 55, 'خبير AI'),
-        (8, 'المحاسبة', 20, 4.8, 90, 'محاسب معتمد');
+      INSERT INTO students (user_id, university, major, graduation_year) VALUES (1, 'جامعة الملك سعود', 'علوم الحاسب', '2025');
+      INSERT INTO experts (user_id, specialty, years_experience, rating, sessions_count, bio, list_in_student_app, list_in_company_directory) VALUES 
+        (2, 'تطوير البرمجيات', 12, 0, 42, 'خبير في تطوير التطبيقات', 1, 0),
+        (4, 'التسويق الرقمي', 8, 0, 67, 'خبيرة تسويق', 1, 0),
+        (5, 'إدارة الأعمال', 15, 0, 28, 'خبير إدارة', 1, 0),
+        (6, 'التصميم الجرافيكي', 6, 0, 35, 'مصممة جرافيك', 1, 0),
+        (7, 'الذكاء الاصطناعي', 10, 0, 55, 'خبير AI', 1, 0),
+        (8, 'المحاسبة', 20, 0, 90, 'محاسب معتمد', 1, 0);
       INSERT INTO companies (user_id, company_name, industry) VALUES (3, 'شركة التقنية', 'التقنية');
       INSERT INTO sessions (expert_id, student_id, scheduled_date, scheduled_time, status) VALUES 
-        (1, 1, '2026-02-28', '10:00', 'upcoming'),
-        (2, 1, '2026-03-01', '14:00', 'upcoming'),
-        (3, 1, '2026-03-05', '09:00', 'upcoming'),
-        (4, 1, '2026-03-10', '16:00', 'upcoming'),
-        (1, 1, '2026-02-20', '11:00', 'completed'),
-        (2, 1, '2026-02-15', '14:00', 'completed'),
-        (5, 1, '2026-02-10', '10:30', 'completed');
+        (1, 1, '2025-02-28', '10:00', 'upcoming'),
+        (2, 1, '2025-03-01', '14:00', 'upcoming'),
+        (3, 1, '2025-03-05', '09:00', 'upcoming'),
+        (4, 1, '2025-03-10', '16:00', 'upcoming'),
+        (1, 1, '2025-02-20', '11:00', 'completed'),
+        (2, 1, '2025-02-15', '14:00', 'completed'),
+        (5, 1, '2025-02-10', '10:30', 'completed');
       INSERT INTO notifications (user_id, title, body) VALUES 
-        (NULL, 'مرحباً بك في خبرتي', 'منصة تدريبية تربط الخبراء بالطلاب والشركات'),
+        (NULL, 'مرحباً بك', 'منصة تدريبية تربط الخبراء بالطلاب والشركات'),
         (1, 'جلسة قادمة', 'لديك جلسة مع أحمد محمد غداً الساعة 10:00'),
         (1, 'تذكير', 'أكمل ملفك الشخصي للاستفادة من جميع الميزات'),
-        (1, 'ترحيب', 'مرحباً بك في خبرتي! استكشف الخبراء واحجز جلساتك الأولى'),
+        (1, 'ترحيب', 'استكشف الخبراء واحجز جلساتك الأولى'),
         (1, 'جلسة جديدة', 'تم تأكيد حجزك مع سارة علي يوم 1 مارس'),
         (1, 'تقييم', 'قيم جلستك الأخيرة مع خالد حسن لمساعدتنا على التحسن'),
         (2, 'جلسة قادمة', 'لديك جلسة مع طالب تجريبي غداً 10:00'),
         (2, 'تحديث المنصة', 'تم إضافة ميزات جديدة للتطبيق'),
         (2, 'إحصائيات', 'أكملت 42 جلسة هذا الشهر - أحسنت!'),
         (3, 'نظرة عامة', 'لديك 6 خبراء و 15 جلسة نشطة على المنصة'),
-        (3, 'ترحيب', 'مرحباً بشركتك في منصة خبرتي للتدريب والتطوير'),
+        (3, 'ترحيب', 'مرحباً بشركتك — نتمنى لك تجربة مثمرة للتدريب والتطوير'),
         (3, 'تواصل مع الخبراء', 'يمكنك التواصل مع أي خبير عبر زر المحادثة في بطاقة الخبير'),
         (3, 'إشعار إعلان', 'ورشة عمل جديدة في الذكاء الاصطناعي مع خبير عمر يوسف - تواصل معه للمزيد'),
-        (3, 'تحديث أسبوعي', 'تم تنفيذ 23 جلسة هذا الأسبوع عبر منصة خبرتي'),
-        (3, 'فرص شراكات', 'خبير التسويق سارة علي متاحة لشراكات تدريب موظفيك');
+        (3, 'تحديث أسبوعي', 'تم تنفيذ 23 جلسة هذا الأسبوع على المنصة'),
+        (3, 'فرص شراكات', 'خبيرة التسويق سارة علي متاحة لشراكات تدريب موظفيك');
     `);
   }
 }
@@ -107,10 +107,36 @@ function ensureUserProfile(userId, roleName) {
     if (!x) db.prepare('INSERT INTO students (user_id) VALUES (?)').run(userId);
   } else if (roleName === 'expert') {
     const x = db.prepare('SELECT id FROM experts WHERE user_id = ?').get(userId);
-    if (!x) db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(userId, 'تخصص افتراضي');
-  } else if (roleName === 'company') {
+    if (!x) {
+      try {
+        db.prepare('INSERT INTO experts (user_id, specialty, is_verified, list_in_student_app, list_in_company_directory) VALUES (?, ?, 0, 1, 0)').run(userId, 'تخصص افتراضي');
+      } catch (_) {
+        db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(userId, 'تخصص افتراضي');
+      }
+    }
+  } else if (roleName === 'company' || roleName === 'company_manager' || roleName === 'company_delegate') {
     const x = db.prepare('SELECT id FROM companies WHERE user_id = ?').get(userId);
-    if (!x) db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(userId, 'شركة');
+    if (!x) {
+      if (roleName === 'company_delegate') {
+        const urow = db.prepare('SELECT parent_company_user_id FROM users WHERE id = ?').get(userId);
+        const pid = urow && urow.parent_company_user_id;
+        const pc = pid
+          ? db.prepare('SELECT company_name, COALESCE(industry, \'\') as industry FROM companies WHERE user_id = ?').get(pid)
+          : null;
+        if (pc) {
+          db.prepare('INSERT INTO companies (user_id, company_name, industry) VALUES (?, ?, ?)').run(
+            userId,
+            pc.company_name,
+            pc.industry || ''
+          );
+        } else {
+          db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(userId, 'مفوّض شركة');
+        }
+      } else {
+        const cn = roleName === 'company_manager' ? 'مسؤول شراكات' : 'شركة';
+        db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(userId, cn);
+      }
+    }
   }
 }
 
@@ -118,7 +144,7 @@ function ensureUserProfile(userId, roleName) {
 function migrateNotifications() {
   const hasGlobal = db.prepare('SELECT 1 FROM notifications WHERE user_id IS NULL LIMIT 1').get();
   if (!hasGlobal) {
-    try { db.prepare('INSERT INTO notifications (user_id, title, body) VALUES (NULL, ?, ?)').run('مرحباً بك في خبرتي', 'منصة تدريبية تربط الخبراء بالطلاب والشركات'); } catch (_) { }
+    try { db.prepare('INSERT INTO notifications (user_id, title, body) VALUES (NULL, ?, ?)').run('مرحباً بك', 'منصة تدريبية تربط الخبراء بالطلاب والشركات'); } catch (_) { }
   }
 }
 migrateNotifications();
@@ -140,6 +166,202 @@ function migrateAdminRole() {
   }
 }
 migrateAdminRole();
+
+/** لمرة واحدة: تصفير تقييمات الخبراء التجريبية واستبدال 2026 بـ 2025 في التواريخ */
+function migrateRatingsZeroYears2025() {
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);`);
+    const done = db.prepare(`SELECT 1 AS ok FROM app_meta WHERE key = 'ratings_zero_years_2025_v1'`).get();
+    if (done) return;
+    const run = db.transaction(() => {
+      db.prepare(`UPDATE experts SET rating = 0`).run();
+      db.prepare(`UPDATE students SET graduation_year = '2025' WHERE graduation_year = '2026'`).run();
+      db.prepare(
+        `UPDATE sessions SET scheduled_date = REPLACE(scheduled_date, '2026', '2025') WHERE instr(scheduled_date, '2026') > 0`
+      ).run();
+      db.prepare(`INSERT INTO app_meta (key, value) VALUES ('ratings_zero_years_2025_v1', '1')`).run();
+    });
+    run();
+  } catch (e) {
+    console.error('[migrateRatingsZeroYears2025]', e);
+  }
+}
+migrateRatingsZeroYears2025();
+
+/** أعمدة ظهور الخبير للطلاب vs للشركات + شركاء بأسماء مختلفة + دور مسؤول الشركة */
+function migrateExpertListsCompanyPartnersAndManager() {
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);`);
+    try { db.prepare('ALTER TABLE experts ADD COLUMN list_in_student_app INTEGER DEFAULT 1').run(); } catch (_) { }
+    try { db.prepare('ALTER TABLE experts ADD COLUMN list_in_company_directory INTEGER DEFAULT 0').run(); } catch (_) { }
+    db.prepare('UPDATE experts SET list_in_student_app = 1 WHERE list_in_student_app IS NULL').run();
+    db.prepare('UPDATE experts SET list_in_company_directory = 0 WHERE list_in_company_directory IS NULL').run();
+
+    let mgrRole = db.prepare("SELECT id FROM roles WHERE name = 'company_manager'").get();
+    if (!mgrRole) {
+      db.prepare("INSERT INTO roles (name) VALUES ('company_manager')").run();
+      mgrRole = db.prepare("SELECT id FROM roles WHERE name = 'company_manager'").get();
+    }
+    if (!db.prepare("SELECT id FROM users WHERE email = 'manager@khibarti.com'").get() && mgrRole) {
+      db.prepare(
+        "INSERT INTO users (email, password, role_id, name) VALUES ('manager@khibarti.com', '123456', ?, 'مسؤول الشراكة')"
+      ).run(mgrRole.id);
+      const mu = db.prepare("SELECT id FROM users WHERE email = 'manager@khibarti.com'").get();
+      if (mu) db.prepare("INSERT INTO companies (user_id, company_name, industry) VALUES (?, 'قسم الشراكات', 'التدريب')").run(mu.id);
+    }
+
+    const done = db.prepare("SELECT 1 FROM app_meta WHERE key = 'partner_experts_v1'").get();
+    if (done) return;
+
+    const partners = [
+      { email: 'corp.partner1@khibarti.com', name: 'د. هند العتيبي', spec: 'الاستشارات الإدارية', years: 14, bio: 'شريك تدريب — استشارات وإدارة تغيير' },
+      { email: 'corp.partner2@khibarti.com', name: 'م. سلطان القحطاني', spec: 'التحول الرقمي', years: 11, bio: 'شريك تدريب — تحول رقمي للمؤسسات' },
+      { email: 'corp.partner3@khibarti.com', name: 'أ. لينا الزهراني', spec: 'تطوير الموارد البشرية', years: 9, bio: 'شريك تدريب — تطوير الأداء والمواهب' },
+      { email: 'corp.partner4@khibarti.com', name: 'م. ريم الشمري', spec: 'الجودة والامتثال', years: 16, bio: 'شريك تدريب — جودة ومعايير مهنية' },
+    ];
+    const expertRole = db.prepare("SELECT id FROM roles WHERE name = 'expert'").get();
+    if (!expertRole) return;
+    const rid = expertRole.id;
+    const run = db.transaction(() => {
+      for (const p of partners) {
+        if (db.prepare('SELECT id FROM users WHERE email = ?').get(p.email)) continue;
+        const ins = db.prepare('INSERT INTO users (email, password, role_id, name) VALUES (?, ?, ?, ?)').run(p.email, '123456', rid, p.name);
+        const uid = ins.lastInsertRowid;
+        db.prepare(
+          `INSERT INTO experts (user_id, specialty, years_experience, rating, sessions_count, bio, is_verified, list_in_student_app, list_in_company_directory)
+           VALUES (?, ?, ?, 0, 0, ?, 0, 0, 1)`
+        ).run(uid, p.spec, p.years, p.bio);
+      }
+      db.prepare("INSERT INTO app_meta (key, value) VALUES ('partner_experts_v1', '1')").run();
+    });
+    run();
+  } catch (e) {
+    console.error('[migrateExpertListsCompanyPartnersAndManager]', e);
+  }
+}
+migrateExpertListsCompanyPartnersAndManager();
+
+/**
+ * إصلاح لمرة واحدة: بعض قواعد البيانات القديمة جعلت list_in_student_app = 0 لكل الخبراء
+ * فيختفون من تطبيق الطالب. نُعيد الظهور للجميع ما عدا شركاء الشركة (corp.partner*).
+ */
+function migrateRestoreExpertsStudentList() {
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);`);
+    const done = db.prepare(`SELECT 1 FROM app_meta WHERE key = 'restore_experts_student_list_v1'`).get();
+    if (done) return;
+    db.prepare(`
+      UPDATE experts
+      SET list_in_student_app = 1
+      WHERE COALESCE(list_in_student_app, 1) = 0
+        AND user_id IN (
+          SELECT id FROM users
+          WHERE COALESCE(email, '') NOT LIKE 'corp.partner%@khibarti.com'
+        )
+    `).run();
+    db.prepare(`INSERT INTO app_meta (key, value) VALUES ('restore_experts_student_list_v1', '1')`).run();
+  } catch (e) {
+    console.error('[migrateRestoreExpertsStudentList]', e);
+  }
+}
+migrateRestoreExpertsStudentList();
+
+/** إزالة عبارة «مرحباً بك في خبرتي» وذِكر «منصة خبرتي» من إشعارات قديمة */
+function migrateRemoveWelcomeInKhibartiPhrase() {
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);`);
+    const done = db.prepare(`SELECT 1 FROM app_meta WHERE key = 'remove_welcome_in_khibarti_v1'`).get();
+    if (done) return;
+    const run = db.transaction(() => {
+      db.prepare(`UPDATE notifications SET title = REPLACE(title, 'مرحباً بك في خبرتي', 'مرحباً بك') WHERE title LIKE '%مرحباً بك في خبرتي%'`).run();
+      db.prepare(`UPDATE notifications SET body = REPLACE(body, 'مرحباً بك في خبرتي!', 'مرحباً بك. ') WHERE body LIKE '%مرحباً بك في خبرتي!%'`).run();
+      db.prepare(`UPDATE notifications SET body = REPLACE(body, 'مرحباً بك في خبرتي', 'مرحباً بك') WHERE body LIKE '%مرحباً بك في خبرتي%'`).run();
+      db.prepare(`UPDATE notifications SET body = REPLACE(body, 'منصة خبرتي', 'المنصة') WHERE body LIKE '%منصة خبرتي%'`).run();
+      db.prepare(`UPDATE notifications SET body = REPLACE(body, 'عبر منصة خبرتي', 'عبر المنصة') WHERE body LIKE '%عبر منصة خبرتي%'`).run();
+      db.prepare(`UPDATE notifications SET body = REPLACE(body, 'في منصة خبرتي', 'في المنصة') WHERE body LIKE '%في منصة خبرتي%'`).run();
+      db.prepare(`INSERT INTO app_meta (key, value) VALUES ('remove_welcome_in_khibarti_v1', '1')`).run();
+    });
+    run();
+  } catch (e) {
+    console.error('[migrateRemoveWelcomeInKhibartiPhrase]', e);
+  }
+}
+migrateRemoveWelcomeInKhibartiPhrase();
+
+/** عمود ربط المفوّض بحساب الشركة الرئيسي + دور company_delegate */
+function migrateCompanyDelegates() {
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);`);
+    const done = db.prepare(`SELECT 1 FROM app_meta WHERE key = 'company_delegates_v1'`).get();
+    if (done) return;
+    try {
+      db.prepare('ALTER TABLE users ADD COLUMN parent_company_user_id INTEGER NULL').run();
+    } catch (_) { /* column exists */ }
+    let delRole = db.prepare("SELECT id FROM roles WHERE name = 'company_delegate'").get();
+    if (!delRole) {
+      db.prepare("INSERT INTO roles (name) VALUES ('company_delegate')").run();
+      delRole = db.prepare("SELECT id FROM roles WHERE name = 'company_delegate'").get();
+    }
+    db.prepare(`INSERT INTO app_meta (key, value) VALUES ('company_delegates_v1', '1')`).run();
+  } catch (e) {
+    console.error('[migrateCompanyDelegates]', e);
+  }
+}
+migrateCompanyDelegates();
+
+/** طلبات الخبراء للظهور في دليل الشركات — موافقة مسؤول الشراكات */
+function migrateCompanyPartnerRequests() {
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);`);
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS company_partner_requests (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        expert_id INTEGER NOT NULL UNIQUE,
+        status TEXT NOT NULL DEFAULT 'pending',
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    const done = db.prepare(`SELECT 1 FROM app_meta WHERE key = 'company_partner_requests_v1'`).get();
+    if (done) return;
+    const run = db.transaction(() => {
+      const candidates = db.prepare(`
+        SELECT e.id FROM experts e
+        JOIN users u ON u.id = e.user_id
+        WHERE COALESCE(e.list_in_company_directory, 0) = 0
+          AND COALESCE(u.email, '') NOT LIKE 'corp.partner%@khibarti.com'
+        LIMIT 2
+      `).all();
+      for (const row of candidates) {
+        try {
+          db.prepare(`INSERT INTO company_partner_requests (expert_id, status) VALUES (?, 'pending')`).run(row.id);
+        } catch (_) { /* يوجد صف */ }
+      }
+      db.prepare(`INSERT INTO app_meta (key, value) VALUES ('company_partner_requests_v1', '1')`).run();
+    });
+    run();
+  } catch (e) {
+    console.error('[migrateCompanyPartnerRequests]', e);
+  }
+}
+migrateCompanyPartnerRequests();
+
+function isCompanyOfficerUserId(userId) {
+  const uid = parseInt(userId, 10);
+  if (isNaN(uid) || uid < 1) return false;
+  const row = db.prepare(
+    `SELECT u.id FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ? AND r.name IN ('company','company_manager','company_delegate')`
+  ).get(uid);
+  return !!row;
+}
+
+function isCompanyPrincipalUserId(userId) {
+  const uid = parseInt(userId, 10);
+  if (isNaN(uid) || uid < 1) return false;
+  const row = db.prepare(
+    `SELECT u.id FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ? AND r.name IN ('company','company_manager')`
+  ).get(uid);
+  return !!row;
+}
 
 function requireAdmin(req, res) {
   const raw = req.query.adminUserId ?? req.body?.adminUserId;
@@ -177,7 +399,13 @@ app.get('/api/auth/check-email', (req, res) => {
 app.post('/api/auth/login', (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = db.prepare('SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.email = ? AND u.password = ?').get(email, password);
+    const user = db.prepare(`
+      SELECT u.*, r.name as role_name, COALESCE(e.is_verified, 0) as expert_verified
+      FROM users u
+      JOIN roles r ON u.role_id = r.id
+      LEFT JOIN experts e ON e.user_id = u.id
+      WHERE u.email = ? AND u.password = ?
+    `).get(email, password);
     if (!user) return res.status(401).json({ error: 'البريد أو كلمة المرور غير صحيحة' });
     if (user.is_blocked === 1) return res.status(403).json({ error: 'تم تقييد هذا الحساب. تواصل مع الإدارة.' });
     delete user.password;
@@ -191,18 +419,204 @@ app.post('/api/auth/register', (req, res) => {
   try {
     const { email, password, roleId, name } = req.body;
     const roleRow = db.prepare('SELECT name FROM roles WHERE id = ?').get(roleId);
-    if (roleRow && roleRow.name === 'admin') {
+    if (!roleRow) return res.status(400).json({ error: 'دور غير صالح' });
+    if (roleRow.name === 'admin') {
       return res.status(403).json({ error: 'لا يمكن إنشاء حساب مدير من التطبيق' });
+    }
+    if (roleRow.name === 'company_delegate') {
+      return res.status(403).json({ error: 'أضف المفوّضين من لوحة «مسؤول الشراكات» داخل حساب الشركة' });
     }
     const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
     if (exists) return res.status(400).json({ error: 'البريد مستخدم مسبقاً' });
     const r = db.prepare('INSERT INTO users (email, password, role_id, name) VALUES (?, ?, ?, ?)').run(email, password, roleId, name);
     const user = db.prepare('SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?').get(r.lastInsertRowid);
     delete user.password;
-    if (roleId === 1) db.prepare('INSERT INTO students (user_id) VALUES (?)').run(user.id);
-    if (roleId === 2) db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(user.id, 'تخصص افتراضي');
-    if (roleId === 3) db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(user.id, 'شركة');
+    if (roleRow.name === 'student') db.prepare('INSERT INTO students (user_id) VALUES (?)').run(user.id);
+    if (roleRow.name === 'expert') {
+      try {
+        db.prepare('INSERT INTO experts (user_id, specialty, is_verified, list_in_student_app, list_in_company_directory) VALUES (?, ?, 0, 1, 0)').run(user.id, 'تخصص افتراضي');
+      } catch (_) {
+        db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(user.id, 'تخصص افتراضي');
+      }
+    }
+    if (roleRow.name === 'company' || roleRow.name === 'company_manager') {
+      const cn = roleRow.name === 'company_manager' ? 'مسؤول شراكات' : 'شركة';
+      db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(user.id, cn);
+    }
     res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ============ حسابات الشركة الفرعية (مفوّضون) ============
+app.get('/api/company/delegates', (req, res) => {
+  try {
+    const ownerUserId = parseInt(req.query.ownerUserId, 10);
+    if (isNaN(ownerUserId) || ownerUserId < 1) return res.status(400).json({ error: 'ownerUserId مطلوب' });
+    if (!isCompanyPrincipalUserId(ownerUserId)) return res.status(403).json({ error: 'غير مصرّح' });
+    const rows = db.prepare(
+      `SELECT u.id, u.email, u.name, u.created_at FROM users u
+       JOIN roles r ON u.role_id = r.id
+       WHERE u.parent_company_user_id = ? AND r.name = 'company_delegate'
+       ORDER BY u.id ASC`
+    ).all(ownerUserId);
+    res.json(rows);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/company/delegates', (req, res) => {
+  try {
+    const body = req.body || {};
+    const ownerUserId = parseInt(body.ownerUserId, 10);
+    const email = typeof body.email === 'string' ? body.email.trim() : '';
+    const password = typeof body.password === 'string' ? body.password : '';
+    const name = typeof body.name === 'string' ? body.name.trim() : '';
+    if (isNaN(ownerUserId) || ownerUserId < 1) return res.status(400).json({ error: 'ownerUserId غير صالح' });
+    if (!isCompanyPrincipalUserId(ownerUserId)) return res.status(403).json({ error: 'فقط حساب الشركة أو مسؤول الشراكات يضيف مفوّضين' });
+    if (!email || !name) return res.status(400).json({ error: 'البريد والاسم مطلوبان' });
+    if (password.length < 6) return res.status(400).json({ error: 'كلمة المرور 6 أحرف على الأقل' });
+    const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+    if (exists) return res.status(400).json({ error: 'البريد مستخدم مسبقاً' });
+    const parentCo = db.prepare('SELECT company_name, COALESCE(industry, \'\') as industry FROM companies WHERE user_id = ?').get(ownerUserId);
+    if (!parentCo) return res.status(400).json({ error: 'لا يوجد ملف شركة للمالك' });
+    const delRole = db.prepare("SELECT id FROM roles WHERE name = 'company_delegate'").get();
+    if (!delRole) return res.status(500).json({ error: 'دور المفوّض غير مهيأ' });
+    const ins = db.prepare(
+      'INSERT INTO users (email, password, role_id, name, parent_company_user_id) VALUES (?, ?, ?, ?, ?)'
+    ).run(email, password, delRole.id, name, ownerUserId);
+    const newId = ins.lastInsertRowid;
+    db.prepare('INSERT INTO companies (user_id, company_name, industry) VALUES (?, ?, ?)').run(
+      newId,
+      parentCo.company_name,
+      parentCo.industry || ''
+    );
+    const user = db.prepare(
+      'SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?'
+    ).get(newId);
+    delete user.password;
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.delete('/api/company/delegates/:delegateId', (req, res) => {
+  try {
+    const delegateId = parseInt(req.params.delegateId, 10);
+    const ownerUserId = parseInt((req.query.ownerUserId ?? req.body?.ownerUserId), 10);
+    if (isNaN(delegateId) || delegateId < 1 || isNaN(ownerUserId) || ownerUserId < 1) {
+      return res.status(400).json({ error: 'معرّفات غير صالحة' });
+    }
+    if (!isCompanyPrincipalUserId(ownerUserId)) return res.status(403).json({ error: 'غير مصرّح' });
+    const row = db.prepare(
+      `SELECT u.id FROM users u JOIN roles r ON u.role_id = r.id
+       WHERE u.id = ? AND u.parent_company_user_id = ? AND r.name = 'company_delegate'`
+    ).get(delegateId, ownerUserId);
+    if (!row) return res.status(404).json({ error: 'غير موجود' });
+    db.prepare('DELETE FROM companies WHERE user_id = ?').run(delegateId);
+    db.prepare('DELETE FROM users WHERE id = ?').run(delegateId);
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ============ طلبات دليل الشركات (موافقة / رفض — مسؤول الشراكات) ============
+app.get('/api/company/partner-requests', (req, res) => {
+  try {
+    const officerUserId = parseInt(req.query.officerUserId, 10);
+    const status = typeof req.query.status === 'string' ? req.query.status : 'pending';
+    if (isNaN(officerUserId) || officerUserId < 1) return res.status(400).json({ error: 'officerUserId مطلوب' });
+    if (!isCompanyOfficerUserId(officerUserId)) return res.status(403).json({ error: 'غير مصرّح' });
+    if (!['pending', 'approved', 'rejected'].includes(status)) {
+      return res.status(400).json({ error: 'حالة غير صالحة' });
+    }
+    const rows = db.prepare(`
+      SELECT r.id, r.expert_id, r.status, r.created_at, e.specialty, u.name as expert_name, e.user_id as expert_user_id
+      FROM company_partner_requests r
+      JOIN experts e ON e.id = r.expert_id
+      JOIN users u ON u.id = e.user_id
+      WHERE r.status = ?
+      ORDER BY datetime(r.created_at) DESC
+    `).all(status);
+    res.json(rows);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.patch('/api/company/partner-requests/:id', (req, res) => {
+  try {
+    const requestId = parseInt(req.params.id, 10);
+    const officerUserId = parseInt(req.body?.officerUserId, 10);
+    const decision = req.body?.decision;
+    if (isNaN(requestId) || requestId < 1) return res.status(400).json({ error: 'معرّف غير صالح' });
+    if (isNaN(officerUserId) || officerUserId < 1) return res.status(400).json({ error: 'officerUserId مطلوب' });
+    if (!isCompanyOfficerUserId(officerUserId)) return res.status(403).json({ error: 'غير مصرّح' });
+    if (decision !== 'approve' && decision !== 'reject') {
+      return res.status(400).json({ error: 'decision يجب أن يكون approve أو reject' });
+    }
+    const row = db.prepare('SELECT * FROM company_partner_requests WHERE id = ?').get(requestId);
+    if (!row) return res.status(404).json({ error: 'غير موجود' });
+    if (row.status !== 'pending') return res.status(400).json({ error: 'تمت معالجة هذا الطلب مسبقاً' });
+    if (decision === 'approve') {
+      const run = db.transaction(() => {
+        db.prepare(`UPDATE company_partner_requests SET status = 'approved' WHERE id = ?`).run(requestId);
+        db.prepare(`UPDATE experts SET list_in_company_directory = 1 WHERE id = ?`).run(row.expert_id);
+      });
+      run();
+    } else {
+      db.prepare(`UPDATE company_partner_requests SET status = 'rejected' WHERE id = ?`).run(requestId);
+    }
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/experts/partner-directory-request/me', (req, res) => {
+  try {
+    const expertUserId = parseInt(req.query.expertUserId, 10);
+    if (isNaN(expertUserId) || expertUserId < 1) return res.status(400).json({ error: 'expertUserId مطلوب' });
+    const role = db.prepare(`SELECT r.name FROM users u JOIN roles r ON r.id = u.role_id WHERE u.id = ?`).get(expertUserId);
+    if (!role || role.name !== 'expert') return res.status(403).json({ error: 'محجوز للخبراء' });
+    const ex = db.prepare(
+      'SELECT id, COALESCE(list_in_company_directory, 0) as in_directory FROM experts WHERE user_id = ?'
+    ).get(expertUserId);
+    if (!ex) return res.json({ inDirectory: false, requestStatus: null });
+    const reqRow = db.prepare('SELECT status FROM company_partner_requests WHERE expert_id = ?').get(ex.id);
+    res.json({
+      inDirectory: !!ex.in_directory,
+      requestStatus: reqRow ? reqRow.status : null,
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/experts/partner-directory-request', (req, res) => {
+  try {
+    const expertUserId = parseInt(req.body?.expertUserId, 10);
+    if (isNaN(expertUserId) || expertUserId < 1) return res.status(400).json({ error: 'expertUserId مطلوب' });
+    const user = db.prepare(`SELECT u.id, u.email FROM users u JOIN roles r ON r.id = u.role_id WHERE u.id = ? AND r.name = 'expert'`).get(expertUserId);
+    if (!user) return res.status(403).json({ error: 'محجوز للخبراء' });
+    const em = String(user.email || '');
+    if (em.includes('corp.partner')) return res.status(400).json({ error: 'لا يلزم طلب لهذا الحساب' });
+    const ex = db.prepare('SELECT id, COALESCE(list_in_company_directory, 0) as lcd FROM experts WHERE user_id = ?').get(expertUserId);
+    if (!ex) return res.status(400).json({ error: 'لا ملف خبير' });
+    if (ex.lcd === 1) return res.status(400).json({ error: 'أنت مُدرج بالفعل في دليل الشركات' });
+    const existing = db.prepare('SELECT id, status FROM company_partner_requests WHERE expert_id = ?').get(ex.id);
+    if (existing) {
+      if (existing.status === 'pending') return res.status(400).json({ error: 'طلبك قيد المراجعة' });
+      if (existing.status === 'approved') return res.status(400).json({ error: 'تمت الموافقة مسبقاً' });
+      db.prepare(`UPDATE company_partner_requests SET status = 'pending', created_at = CURRENT_TIMESTAMP WHERE expert_id = ?`).run(ex.id);
+    } else {
+      db.prepare(`INSERT INTO company_partner_requests (expert_id, status) VALUES (?, 'pending')`).run(ex.id);
+    }
+    res.json({ ok: true });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -211,9 +625,14 @@ app.post('/api/auth/register', (req, res) => {
 // ============ Experts ============
 app.get('/api/experts', (req, res) => {
   try {
-    const { search, specialty, minYears, minRating } = req.query;
+    const { search, specialty, minYears, minRating, audience } = req.query;
     let sql = 'SELECT e.*, u.name FROM experts e JOIN users u ON e.user_id = u.id WHERE 1=1';
     const params = [];
+    if (audience === 'company') {
+      sql += ' AND COALESCE(e.list_in_company_directory, 0) = 1';
+    } else {
+      sql += ' AND COALESCE(e.list_in_student_app, 1) = 1';
+    }
     if (search) { sql += ' AND (u.name LIKE ? OR e.specialty LIKE ?)'; params.push(`%${search}%`, `%${search}%`); }
     if (specialty && specialty !== 'الكل') { sql += ' AND e.specialty = ?'; params.push(specialty); }
     if (minYears) { sql += ' AND e.years_experience >= ?'; params.push(minYears); }
@@ -228,8 +647,26 @@ app.get('/api/experts', (req, res) => {
 
 app.get('/api/experts/specialties', (req, res) => {
   try {
-    const rows = db.prepare('SELECT DISTINCT specialty FROM experts').all();
+    const { audience } = req.query;
+    let sql = 'SELECT DISTINCT e.specialty FROM experts e WHERE 1=1';
+    if (audience === 'company') {
+      sql += ' AND COALESCE(e.list_in_company_directory, 0) = 1';
+    } else {
+      sql += ' AND COALESCE(e.list_in_student_app, 1) = 1';
+    }
+    const rows = db.prepare(sql).all();
     res.json(rows.map(r => r.specialty));
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/experts/by-user/:userId', (req, res) => {
+  try {
+    const uid = parseInt(req.params.userId, 10);
+    if (isNaN(uid) || uid < 1) return res.status(400).json({ error: 'معرّف غير صالح' });
+    const row = db.prepare('SELECT e.*, u.name FROM experts e JOIN users u ON e.user_id = u.id WHERE e.user_id = ?').get(uid);
+    res.json(row || null);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -327,11 +764,17 @@ app.get('/api/notifications/:userId', (req, res) => {
 // ============ User ============
 app.get('/api/users/:id', (req, res) => {
   try {
-    const user = db.prepare('SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?').get(req.params.id);
+    const user = db.prepare(`
+      SELECT u.*, r.name as role_name, COALESCE(e.is_verified, 0) as expert_verified
+      FROM users u
+      JOIN roles r ON u.role_id = r.id
+      LEFT JOIN experts e ON e.user_id = u.id
+      WHERE u.id = ?
+    `).get(req.params.id);
     if (!user) return res.status(404).json({ error: 'غير موجود' });
     delete user.password;
     res.json(user);
-   } catch (e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
@@ -346,7 +789,13 @@ app.patch('/api/users/:id', (req, res) => {
     if (phone !== undefined) db.prepare('UPDATE users SET phone = ? WHERE id = ?').run(phone == null ? null : String(phone), id);
     if (country !== undefined) db.prepare('UPDATE users SET country = ? WHERE id = ?').run(country == null ? null : String(country), id);
     if (avatar !== undefined) db.prepare('UPDATE users SET avatar = ? WHERE id = ?').run(avatar == null ? null : String(avatar), id);
-    const user = db.prepare('SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?').get(id);
+    const user = db.prepare(`
+      SELECT u.*, r.name as role_name, COALESCE(e.is_verified, 0) as expert_verified
+      FROM users u
+      JOIN roles r ON u.role_id = r.id
+      LEFT JOIN experts e ON e.user_id = u.id
+      WHERE u.id = ?
+    `).get(id);
     if (user) delete user.password;
     res.json(user || { ok: true });
   } catch (e) {
@@ -504,14 +953,26 @@ app.post('/api/admin/users', (req, res) => {
     const roleRow = db.prepare('SELECT name FROM roles WHERE id = ?').get(roleId);
     if (!roleRow) return res.status(400).json({ error: 'دور غير موجود' });
     if (roleRow.name === 'admin') return res.status(403).json({ error: 'لا يمكن إنشاء حساب مدير من هنا' });
+    if (roleRow.name === 'company_delegate') {
+      return res.status(403).json({ error: 'أنشئ المفوّضين من تطبيق الشركة — لوحة مسؤول الشراكات' });
+    }
     const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
     if (exists) return res.status(400).json({ error: 'هذا المعرف مستخدم مسبقاً' });
     const r = db.prepare('INSERT INTO users (email, password, role_id, name) VALUES (?, ?, ?, ?)').run(email, password, roleId, name);
     const user = db.prepare('SELECT u.*, r.name as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.id = ?').get(r.lastInsertRowid);
     delete user.password;
-    if (roleId === 1) db.prepare('INSERT INTO students (user_id) VALUES (?)').run(user.id);
-    if (roleId === 2) db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(user.id, 'تخصص افتراضي');
-    if (roleId === 3) db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(user.id, 'شركة');
+    if (roleRow.name === 'student') db.prepare('INSERT INTO students (user_id) VALUES (?)').run(user.id);
+    if (roleRow.name === 'expert') {
+      try {
+        db.prepare('INSERT INTO experts (user_id, specialty, is_verified, list_in_student_app, list_in_company_directory) VALUES (?, ?, 0, 1, 0)').run(user.id, 'تخصص افتراضي');
+      } catch (_) {
+        db.prepare('INSERT INTO experts (user_id, specialty, is_verified) VALUES (?, ?, 0)').run(user.id, 'تخصص افتراضي');
+      }
+    }
+    if (roleRow.name === 'company' || roleRow.name === 'company_manager') {
+      const cn = roleRow.name === 'company_manager' ? 'مسؤول شراكات' : 'شركة';
+      db.prepare('INSERT INTO companies (user_id, company_name) VALUES (?, ?)').run(user.id, cn);
+    }
     res.json(user);
   } catch (e) {
     res.status(500).json({ error: e.message });

@@ -215,7 +215,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text(AppLocalizations.of(context).privacyAndTerms, style: const TextStyle(color: Color(0xFF1A1A1A))),
         content: SingleChildScrollView(
           child: Text(
-            'سياسة الخصوصية والشروط والأحكام — تطبيق خبرتي\n\n'
+            'سياسة الخصوصية والشروط والأحكام — تطبيق Khibarti\n\n'
             'الخصوصية:\n'
             '• نحترم خصوصيتك ولا نشارك بياناتك مع أطراف ثالثة دون مبرر.\n'
             '• يمكنك حذف حسابك في أي وقت من الإعدادات.\n\n'

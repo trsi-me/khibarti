@@ -11,6 +11,7 @@ import 'package:khibarti/screens/expert_home_screen.dart';
 import 'package:khibarti/screens/expert_sessions_screen.dart';
 import 'package:khibarti/screens/company_home_screen.dart';
 import 'package:khibarti/screens/company_experts_screen.dart';
+import 'package:khibarti/screens/company_officer_hub_screen.dart';
 import 'package:khibarti/screens/admin/admin_dashboard_screen.dart';
 import 'package:khibarti/screens/admin/admin_users_screen.dart';
 import 'package:khibarti/screens/admin/admin_sessions_screen.dart';
@@ -46,9 +47,12 @@ class _MainAppState extends State<MainApp> {
           SettingsScreen(),
         ];
       case 'company':
+      case 'company_manager':
+      case 'company_delegate':
         return const [
           CompanyHomeScreen(),
           CompanyExpertsScreen(),
+          CompanyOfficerHubScreen(),
           ProfileScreen(),
           SettingsScreen(),
         ];
@@ -67,7 +71,9 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final isExpert = _role == 'expert';
-    final isCompany = _role == 'company';
+    final isCompany = _role == 'company' ||
+        _role == 'company_manager' ||
+        _role == 'company_delegate';
     final isAdmin = _role == 'admin';
 
     final navIndex = _currentIndex.clamp(0, _screens.length - 1);
@@ -129,6 +135,7 @@ class _MainAppState extends State<MainApp> {
                 ? [
                     (icon: Icons.dashboard_outlined, label: l10n.navBarHome),
                     (icon: Icons.people_outline, label: l10n.navBarCompanyExperts),
+                    (icon: Icons.admin_panel_settings_outlined, label: l10n.navBarCompanyOfficer),
                     (icon: Icons.person_outline, label: l10n.navBarProfile),
                     (icon: Icons.settings_outlined, label: l10n.navBarSettings),
                   ]

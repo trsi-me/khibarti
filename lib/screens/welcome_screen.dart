@@ -200,8 +200,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   Widget _buildRoleButtons(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 12,
+      runSpacing: 12,
       children: [
         _RoleButton(
           label: l10n.student,
@@ -210,7 +212,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           selected: _selectedRole == 1,
           onTap: () => setState(() => _selectedRole = 1),
         ),
-        const SizedBox(width: 14),
         _RoleButton(
           label: l10n.expert,
           icon: Icons.person_outline,
@@ -218,7 +219,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           selected: _selectedRole == 2,
           onTap: () => setState(() => _selectedRole = 2),
         ),
-        const SizedBox(width: 14),
         _RoleButton(
           label: l10n.company,
           icon: Icons.business_outlined,

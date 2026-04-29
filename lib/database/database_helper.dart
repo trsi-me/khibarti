@@ -182,13 +182,13 @@ class DatabaseHelper {
       'user_id': 1,
       'university': 'جامعة الملك سعود',
       'major': 'علوم الحاسب',
-      'graduation_year': '2026',
+      'graduation_year': '2025',
     });
     await db.insert('experts', {
       'user_id': 2,
       'specialty': 'تطوير البرمجيات',
       'years_experience': 12,
-      'rating': 4.8,
+      'rating': 0,
       'sessions_count': 42,
       'bio': 'خبير في تطوير التطبيقات والذكاء الاصطناعي',
     });
@@ -218,21 +218,21 @@ class DatabaseHelper {
     await db.insert('sessions', {
       'expert_id': 1,
       'student_id': 1,
-      'scheduled_date': '2026-02-28',
+      'scheduled_date': '2025-02-28',
       'scheduled_time': '10:00',
       'status': 'upcoming',
     });
     await db.insert('sessions', {
       'expert_id': 2,
       'student_id': 1,
-      'scheduled_date': '2026-03-01',
+      'scheduled_date': '2025-03-01',
       'scheduled_time': '14:00',
       'status': 'upcoming',
     });
     await db.insert('sessions', {
       'expert_id': 1,
       'student_id': 1,
-      'scheduled_date': '2026-02-20',
+      'scheduled_date': '2025-02-20',
       'scheduled_time': '11:00',
       'status': 'completed',
     });
@@ -252,7 +252,7 @@ class DatabaseHelper {
   static const _expertNames = ['سارة علي', 'خالد حسن', 'فاطمة عمر', 'عمر يوسف', 'نورة أحمد'];
   static const _expertSpecialties = ['التسويق الرقمي', 'إدارة الأعمال', 'التصميم الجرافيكي', 'الذكاء الاصطناعي', 'المحاسبة'];
   static const _expertYears = [8, 15, 6, 10, 20];
-  static const _expertRatings = [4.9, 4.6, 4.7, 4.9, 4.8];
+  static const _expertRatings = [0.0, 0.0, 0.0, 0.0, 0.0];
   static const _expertSessions = [67, 28, 35, 55, 90];
 
   // ============ Users & Auth ============

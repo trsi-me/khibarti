@@ -14,10 +14,67 @@ class AppLocalizations {
 
   // Welcome
   String get welcomeTitle =>
-      isAr ? 'مرحباً بك في خبرتي' : 'Welcome to Khibarti';
+      isAr ? 'اختر نوع الحساب' : 'Choose your account type';
   String get student => isAr ? 'طالب' : 'Student';
   String get expert => isAr ? 'خبير' : 'Expert';
   String get company => isAr ? 'شركة' : 'Company';
+  String get companyManager => isAr ? 'مسؤول' : 'Manager';
+  String get companyDelegate => isAr ? 'مفوّض شركة' : 'Company delegate';
+  String get companyTeamSectionTitle =>
+      isAr ? 'حسابات فرعية (مفوّضون)' : 'Sub-accounts (delegates)';
+  String get companyTeamSectionSubtitle => isAr
+      ? 'يستطيع المفوّض استخدام التطبيق بنفس صلاحيات الشركة (الخبراء، الرسائل، الإعدادات) بالنيابة عن الحساب الرئيسي.'
+      : 'A delegate can use the app with the same company powers (experts, messages, settings) on behalf of the main account.';
+  String get companyTeamReadOnlyHint => isAr
+      ? 'المفوّضون يُدارون من حساب الشركة أو مسؤول الشراكات.'
+      : 'Delegates are managed from the main company or partnerships officer account.';
+  String get companyTeamAdd => isAr ? 'إضافة مفوّض' : 'Add delegate';
+  String get companyTeamEmpty => isAr ? 'لا يوجد مفوّضون بعد' : 'No delegates yet';
+  String get companyTeamDialogTitle => isAr ? 'مفوّض جديد' : 'New delegate';
+  String get companyTeamDeleteTitle => isAr ? 'حذف المفوّض؟' : 'Remove delegate?';
+  String get companyTeamDeleteBody => isAr
+      ? 'سيتم حذف الحساب ولن يستطيع الدخول بعد الآن.'
+      : 'This account will be deleted and can no longer sign in.';
+  String get companyTeamAdded => isAr ? 'تم إنشاء المفوّض' : 'Delegate created';
+  String get companyTeamValidationError => isAr
+      ? 'أدخل الاسم والبريد وكلمة مرور لا تقل عن ٦ أحرف'
+      : 'Enter name, email, and a password of at least 6 characters';
+  String get actionDelete => isAr ? 'حذف' : 'Delete';
+  String get errorGeneric => isAr ? 'تعذّر إتمام الطلب' : 'Something went wrong';
+  String get companyOfficerHubTitle => isAr ? 'مسؤول الشراكات' : 'Partnerships officer';
+  String get companyOfficerHubSubtitle =>
+      isAr ? 'متابعة الشركاء المعتمدين والتنسيق معهم' : 'Track and coordinate approved partners';
+  String get companyOfficerBullet1 =>
+      isAr ? 'عرض قائمة الشركاء المعتمدين للشركة' : 'View the company partner directory';
+  String get companyOfficerBullet2 =>
+      isAr ? 'مراجعة الإشعارات والتحديثات' : 'Review notifications and updates';
+  String get companyOfficerBullet3 =>
+      isAr ? 'التنسيق مع الفريق داخل نفس حساب الشركة' : 'Coordinate with your team under one company login';
+  String get partnerRequestsSectionTitle =>
+      isAr ? 'طلبات الظهور في دليل الشركات' : 'Partner directory requests';
+  String get partnerRequestsSectionHint => isAr
+      ? 'الخبراء الذين طلبوا الظهور كشركاء — وافق أو ارفض.'
+      : 'Experts who asked to appear as partners — approve or reject.';
+  String get partnerRequestsEmpty =>
+      isAr ? 'لا توجد طلبات قيد المراجعة' : 'No pending requests';
+  String get partnerRequestApprove => isAr ? 'موافقة' : 'Approve';
+  String get partnerRequestReject => isAr ? 'رفض' : 'Reject';
+  String get partnerRequestProcessed => isAr ? 'تم تحديث الطلب' : 'Request updated';
+  String get expertPartnerDirCardTitle =>
+      isAr ? 'دليل شركات المنصة' : 'Company partner directory';
+  String get expertPartnerDirListed =>
+      isAr ? 'أنت مُدرّج في دليل الشركات' : 'You are listed for companies';
+  String get expertPartnerDirPending =>
+      isAr ? 'طلبك قيد مراجعة مسؤول الشراكات' : 'Your request is under review';
+  String get expertPartnerDirRejected =>
+      isAr ? 'تم رفض طلبك — يمكنك إعادة الإرسال' : 'Request was declined — you can send again';
+  String get expertPartnerDirRequestCta =>
+      isAr ? 'طلب الظهور في دليل الشركات' : 'Request listing in company directory';
+  String get expertPartnerDirIntro => isAr
+      ? 'للظهور كشريك تدريبي لدى شركات المنصة.'
+      : 'To appear as a training partner for companies on the platform.';
+  String get expertPartnerDirRequestSent =>
+      isAr ? 'تم إرسال الطلب' : 'Request submitted';
   String get login => isAr ? 'تسجيل الدخول' : 'LOGIN';
   String get signUp => isAr ? 'إنشاء حساب' : 'SIGN UP';
 
@@ -49,6 +106,7 @@ class AppLocalizations {
   String get navBarAdminSessions => isAr ? 'جلسات' : 'Sessions';
   String get navBarExpertSessions => isAr ? 'جلسات' : 'Sessions';
   String get navBarCompanyExperts => isAr ? 'خبراء' : 'Experts';
+  String get navBarCompanyOfficer => isAr ? 'مسؤول' : 'Officer';
 
   // Home
   String get homeTitle => isAr ? 'خبرتي' : 'Khibarti';
@@ -121,7 +179,7 @@ class AppLocalizations {
   String get mockVideo => isAr ? 'محاكاة الفيديو' : 'Mock Video';
   String get chat => isAr ? 'الشات' : 'Chat';
   String get welcomeToSession =>
-      isAr ? 'مرحباً بك في الجلسة' : 'Welcome to the session';
+      isAr ? 'الجلسة التدريبية' : 'Training session';
   String get expertGreeting => isAr
       ? 'أهلاً، كيف يمكنني مساعدتك اليوم؟'
       : 'Hello, how can I help you today?';
@@ -154,6 +212,14 @@ class AppLocalizations {
           : 'I agree to the Privacy Policy and Terms';
   String get agreeToTermsError =>
       isAr ? 'يجب الموافقة للمتابعة' : 'You must accept to continue';
+  String get agreeToDataRecording =>
+      isAr
+          ? 'أوافق على تسجيل بياناتي داخل النظام وفقاً للسياسة المعتمدة'
+          : 'I consent to my data being stored in the system as per the policy';
+  String get agreeToDataRecordingError =>
+      isAr ? 'يجب الموافقة على تسجيل البيانات للمتابعة' : 'You must consent to data recording to continue';
+  String get selectSessionDateTime =>
+      isAr ? 'اختر تاريخ ووقت الجلسة' : 'Pick session date and time';
   String get companyExpertDisclaimer => isAr
       ? 'الخبير يقدّم خدماته بشكل مستقل. التواصل المباشر يكون خارج وساطة الشركة ومسؤولية الأطراف.'
       : 'Experts provide services independently. Direct contact is outside the company’s mediation.';
