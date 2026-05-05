@@ -6,6 +6,7 @@ import 'package:khibarti/screens/welcome_screen.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/services/session_service.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool isSignUp;
@@ -277,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                   OutlinedButton.icon(
                     onPressed: _navigateToWelcome,
-                    icon: const Icon(Icons.home_outlined, size: 20),
+                    icon: Icon(Icons.home_outlined, size: 20.aks),
                     label: Text(l10n.backToHome),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFF1B5E57),

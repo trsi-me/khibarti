@@ -4,6 +4,7 @@ import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// شاشة الإشعارات — تعرض جميع إشعارات المستخدم
 class NotificationsScreen extends StatefulWidget {
@@ -67,10 +68,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             color: AppColors.primary.withOpacity(0.12),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.notifications_outlined,
                             color: AppColors.primary,
-                            size: 22,
+                            size: 22.aks,
                           ),
                         ),
                         title: n['title'] as String? ?? '',

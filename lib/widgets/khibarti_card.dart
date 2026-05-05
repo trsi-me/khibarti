@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// بطاقات مميزة — تصميم عصري وفريد
 class KhibartiCard {
@@ -32,7 +33,7 @@ class KhibartiCard {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 40, color: color),
+            Icon(icon, size: 40.aks, color: color),
             if (showValue) ...[
               const SizedBox(height: 14),
               Text(
@@ -112,7 +113,7 @@ class KhibartiCard {
             if (showChevron)
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                size: 14,
+                size: 14.aks,
                 color: color.withOpacity(0.7),
               ),
           ],
@@ -193,7 +194,7 @@ class KhibartiCard {
               alignment: Alignment.center,
               children: [
                 CircleAvatar(
-                  radius: 32,
+                  radius: 32.aks,
                   backgroundColor: AppColors.primary.withOpacity(0.12),
                   child: Text(
                     name.isNotEmpty ? name[0] : '?',
@@ -215,7 +216,7 @@ class KhibartiCard {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 2),
                       ),
-                      child: const Icon(Icons.verified_rounded, size: 16, color: Color(0xFFFFFBF0)),
+                      child: Icon(Icons.verified_rounded, size: 16.aks, color: Color(0xFFFFFBF0)),
                     ),
                   ),
               ],
@@ -240,7 +241,7 @@ class KhibartiCard {
                 ),
                 if (isVerified) ...[
                   const SizedBox(width: 4),
-                  Icon(Icons.verified_rounded, size: 16, color: Colors.teal.shade700),
+                  Icon(Icons.verified_rounded, size: 16.aks, color: Colors.teal.shade700),
                 ],
               ],
             ),
@@ -257,7 +258,7 @@ class KhibartiCard {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.star_rounded, size: 14, color: Colors.amber),
+                  Icon(Icons.star_rounded, size: 14.aks, color: Colors.amber),
                   const SizedBox(width: 4),
                   Text(
                     rating.toStringAsFixed(1),
@@ -316,7 +317,7 @@ class KhibartiCard {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 56, color: AppColors.primary.withOpacity(0.4)),
+            Icon(icon, size: 56.aks, color: AppColors.primary.withOpacity(0.4)),
             const SizedBox(height: 16),
             Text(
               message,
@@ -382,7 +383,7 @@ class KhibartiCard {
           ),
           Icon(
             Icons.chevron_right_rounded,
-            size: 20,
+            size: 20.aks,
             color: AppColors.textSecondary,
           ),
         ],

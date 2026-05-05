@@ -6,6 +6,7 @@ import 'package:khibarti/services/session_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/login_screen.dart';
 import 'package:khibarti/widgets/khibarti_logo.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -75,7 +76,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   void _changeLanguage(Locale locale) async {
     AppState.locale = locale;
     await SessionService.saveLocale(locale.languageCode);
-    runApp(const KhibartiApp());
+    runApp(KhibartiApp());
   }
 
   @override
@@ -113,7 +114,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       scale: _scaleAnimation,
                       child: FadeTransition(
                         opacity: _fadeAnimation,
-                        child: const KhibartiLogo(size: 150),
+                        child: KhibartiLogo(size: 150.aks),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -179,7 +180,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             children: [
               Icon(
                 Icons.language,
-                size: 20,
+                size: 20.aks,
                 color: const Color(0xFF1B5E57),
               ),
               const SizedBox(width: 6),
@@ -328,7 +329,7 @@ class _RoleButton extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 34,
+              size: 34.aks,
               weight: 600,
               color: const Color(0xFF1B5E57),
             ),

@@ -16,10 +16,12 @@ class AppColors {
 }
 
 class AppTheme {
-  static ThemeData lightTheme({bool accessibilityMode = false}) {
-    final scale = accessibilityMode ? 1.2 : 1.0;
+  /// [accessibilityIconFactor]: يكبّر حجم الأيقونة الافتراضي في الثيم فقط — بدون تعديل paddings أو margins.
+  static ThemeData lightTheme({double accessibilityIconFactor = 1.0}) {
+    final iconSz = 24.0 * accessibilityIconFactor;
     return ThemeData(
       useMaterial3: true,
+      iconTheme: IconThemeData(color: AppColors.textPrimary, size: iconSz),
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,
@@ -31,11 +33,11 @@ class AppTheme {
         foregroundColor: AppColors.onPrimary,
         elevation: 0,
         titleTextStyle: GoogleFonts.ibmPlexSansArabic(
-          fontSize: 20 * scale,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
           color: AppColors.onPrimary,
         ),
-        iconTheme: const IconThemeData(color: AppColors.onPrimary),
+        iconTheme: IconThemeData(color: AppColors.onPrimary, size: iconSz),
       ),
       // TabBar داخل AppBar على خلفية primary — بدون هذا يظهر نص التبويبات بلون منخفض التباين
       tabBarTheme: TabBarThemeData(
@@ -44,11 +46,11 @@ class AppTheme {
         indicatorColor: Colors.white,
         dividerColor: Colors.transparent,
         labelStyle: GoogleFonts.ibmPlexSansArabic(
-          fontSize: 14 * scale,
+          fontSize: 14,
           fontWeight: FontWeight.w700,
         ),
         unselectedLabelStyle: GoogleFonts.ibmPlexSansArabic(
-          fontSize: 14 * scale,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -63,9 +65,9 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.surface,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16 * scale,
-          vertical: 12 * scale,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -74,15 +76,15 @@ class AppTheme {
           foregroundColor: AppColors.onPrimary,
           elevation: 2,
           shadowColor: AppColors.primary.withOpacity(0.4),
-          padding: EdgeInsets.symmetric(
-            horizontal: 20 * scale,
-            vertical: 12 * scale,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 12,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
           textStyle: GoogleFonts.ibmPlexSansArabic(
-            fontSize: 16 * scale,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -90,11 +92,11 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primary,
-          padding: EdgeInsets.symmetric(horizontal: 20 * scale, vertical: 12 * scale),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           side: const BorderSide(color: AppColors.primary),
           textStyle: GoogleFonts.ibmPlexSansArabic(
-            fontSize: 16 * scale,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -102,19 +104,19 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           textStyle: GoogleFonts.ibmPlexSansArabic(
-            fontSize: 15 * scale,
+            fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
       dialogTheme: DialogThemeData(
         titleTextStyle: GoogleFonts.ibmPlexSansArabic(
-          fontSize: 20 * scale,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
           color: AppColors.textPrimary,
         ),
         contentTextStyle: GoogleFonts.ibmPlexSansArabic(
-          fontSize: 16 * scale,
+          fontSize: 16,
           color: AppColors.textPrimary,
         ),
       ),
@@ -133,27 +135,27 @@ class AppTheme {
       textTheme: GoogleFonts.ibmPlexSansArabicTextTheme(
         TextTheme(
           bodyLarge: TextStyle(
-            fontSize: (17 * scale).clamp(15.0, 24.0),
+            fontSize: 17,
             fontWeight: FontWeight.w600,
             color: AppColors.textPrimary,
           ),
           bodyMedium: TextStyle(
-            fontSize: (15 * scale).clamp(13.0, 20.0),
+            fontSize: 15,
             fontWeight: FontWeight.w600,
             color: AppColors.textSecondary,
           ),
           titleLarge: TextStyle(
-            fontSize: (22 * scale).clamp(20.0, 30.0),
+            fontSize: 22,
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
           ),
           titleMedium: TextStyle(
-            fontSize: (19 * scale).clamp(17.0, 26.0),
+            fontSize: 19,
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
           ),
           labelLarge: TextStyle(
-            fontSize: (16 * scale).clamp(14.0, 22.0),
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),

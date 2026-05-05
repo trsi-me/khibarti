@@ -5,6 +5,7 @@ import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/join_session_screen.dart';
 import 'package:khibarti/screens/notifications_screen.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
 import 'package:khibarti/utils/session_format.dart';
 import 'package:khibarti/screens/expert_detail_screen.dart';
@@ -173,10 +174,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: _sessions.map((s) {
         return KhibartiCard.listItem(
-          leading: const CircleAvatar(
-            radius: 24,
+          leading: CircleAvatar(
+            radius: 24.aks,
             backgroundColor: Color(0xFF1B5E57),
-            child: Icon(Icons.event_available_rounded, color: AppColors.onPrimary, size: 22),
+            child: Icon(Icons.event_available_rounded, color: AppColors.onPrimary, size: 22.aks),
           ),
           title: s['expert_name'] as String? ?? '',
           subtitle: [
@@ -231,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppColors.primary.withOpacity(0.12),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.notifications_outlined, color: AppColors.primary, size: 22),
+            child: Icon(Icons.notifications_outlined, color: AppColors.primary, size: 22.aks),
           ),
           title: n['title'] as String? ?? '',
           subtitle: n['body'] as String?,

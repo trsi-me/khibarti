@@ -7,6 +7,7 @@ import 'package:khibarti/services/api_service.dart' show ApiService, ApiExceptio
 import 'package:khibarti/services/session_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -140,7 +141,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 onTap: _pickAvatar,
                 borderRadius: BorderRadius.circular(60),
                 child: CircleAvatar(
-                  radius: 55,
+                  radius: 55.aks,
                   backgroundColor: AppColors.primary.withOpacity(0.15),
                   backgroundImage: _avatarBase64 != null
                       ? MemoryImage(base64Decode(_avatarBase64!))

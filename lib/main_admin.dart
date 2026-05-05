@@ -14,5 +14,5 @@ void main() async {
   AppState.adminFlavor = true;
   AppState.locale = Locale(await SessionService.loadLocale());
   AppState.accessibilityMode = await SessionService.loadAccessibility();
-  runApp(const KhibartiApp());
+  runApp(KhibartiApp());
 }

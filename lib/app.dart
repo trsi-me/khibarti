@@ -16,7 +16,8 @@ class KhibartiApp extends StatelessWidget {
     return MaterialApp(
       title: AppState.adminFlavor ? 'Khibarti Admin' : 'خبرتي | Khibarti',
       theme: AppTheme.lightTheme(
-        accessibilityMode: AppState.accessibilityMode,
+        accessibilityIconFactor:
+            AppState.accessibilityMode ? AppState.accessibilityUIScale : 1.0,
       ),
       locale: AppState.locale,
       localeResolutionCallback: (_, supported) => AppState.locale,
@@ -30,7 +31,24 @@ class KhibartiApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      key: ValueKey('app_${AppState.locale.languageCode}_${AppState.adminFlavor}'),
+      key: ValueKey(
+        'app_${AppState.locale.languageCode}_${AppState.adminFlavor}_${AppState.accessibilityMode}_${AppState.accessibilityGeneration}',
+      ),
+      builder: (context, child) {
+        final wrapped = child ?? const SizedBox.shrink();
+        if (!AppState.accessibilityMode) return wrapped;
+
+        // من العرض مباشرة — لا نعتمد على MediaQuery الموروث حتى لا يُضاعَف عامل النص بعد OFF ثم ON.
+        final platformMq = MediaQueryData.fromView(View.of(context));
+        final linear = platformMq.textScaler.scale(14) / 14;
+        return MediaQuery(
+          data: platformMq.copyWith(
+            textScaler:
+                TextScaler.linear(linear * AppState.accessibilityUIScale),
+          ),
+          child: wrapped,
+        );
+      },
       home: skipWelcome ? const MainApp() : const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );

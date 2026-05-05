@@ -5,6 +5,7 @@ import 'package:khibarti/screens/admin/admin_user_detail_screen.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// قائمة جميع مستخدمي المنصة للمدير — بطاقات بتصميم موحّد (بدون شريط جانبي)
 class AdminUsersScreen extends StatefulWidget {
@@ -112,6 +113,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 
                   return KhibartiCard.listItem(
                     leading: CircleAvatar(
+                      radius: 20.aks,
                       backgroundColor: AppColors.primary.withValues(alpha: 0.2),
                       child: Text(
                         name.isNotEmpty ? name[0] : '?',
@@ -146,7 +148,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                         ),
                       if (expertVerified)
                         Chip(
-                          avatar: Icon(Icons.verified_rounded, size: 16, color: Colors.teal.shade800),
+                          avatar: Icon(Icons.verified_rounded, size: 16.aks, color: Colors.teal.shade800),
                           label: Text(
                             l10n.expertVerifiedBadge,
                             style: TextStyle(fontSize: 11, color: Colors.teal.shade900),

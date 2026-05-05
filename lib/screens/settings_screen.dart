@@ -8,6 +8,7 @@ import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/login_screen.dart';
 import 'package:khibarti/screens/welcome_screen.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -28,7 +29,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _rebuildApp() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      runApp(const KhibartiApp(skipWelcome: true));
+      // بدون const حتى لا يُعاد استخدام نفس كائن الجذر فيُهمَل تحديث الواجهة.
+      runApp(KhibartiApp(skipWelcome: true));
     });
   }
 
@@ -127,6 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onChanged: (v) async {
               setState(() => _accessibilityMode = v);
               AppState.accessibilityMode = v;
+              AppState.accessibilityGeneration++;
               await SessionService.saveAccessibility(v);
               _rebuildApp();
             },
@@ -276,7 +279,7 @@ class _ActionButton extends StatelessWidget {
                   color: color.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(icon, color: color, size: 26),
+                child: Icon(icon, color: color, size: 26.aks),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -289,7 +292,7 @@ class _ActionButton extends StatelessWidget {
                   ),
                 ),
               ),
-              const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFF1A1A1A)),
+              Icon(Icons.arrow_forward_ios, size: 16.aks, color: Color(0xFF1A1A1A)),
             ],
           ),
         ),
@@ -324,7 +327,7 @@ class _SettingsTile extends StatelessWidget {
               color: const Color(0xFF1B5E57).withOpacity(0.12),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(icon, color: const Color(0xFF1B5E57), size: 22),
+            child: Icon(icon, color: const Color(0xFF1B5E57), size: 22.aks),
           ),
           title: title,
           subtitle: subtitle,

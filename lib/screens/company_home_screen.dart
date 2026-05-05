@@ -3,6 +3,7 @@ import 'package:khibarti/app_state.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
 import 'package:khibarti/screens/notifications_screen.dart';
 /// واجهة الشركة فقط — نظرة عامة، إحصائيات المنصة
@@ -145,7 +146,7 @@ class _CompanyHomeScreenState extends State<CompanyHomeScreen> {
                     color: AppColors.primary.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.notifications_outlined, color: AppColors.primary, size: 22),
+                  child: Icon(Icons.notifications_outlined, color: AppColors.primary, size: 22.aks),
                 ),
                 title: n['title'] as String? ?? '',
                 subtitle: n['body'] as String?,

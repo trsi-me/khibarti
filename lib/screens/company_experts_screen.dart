@@ -3,6 +3,7 @@ import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// واجهة الشركة — أسماء الخبراء وتصريح لكل خبير (بدون تواصل عبر التطبيق)
 class CompanyExpertsScreen extends StatefulWidget {
@@ -116,7 +117,7 @@ class _CompanyExpertsScreenState extends State<CompanyExpertsScreen> {
                   clipBehavior: Clip.none,
                   children: [
                     CircleAvatar(
-                      radius: 24,
+                      radius: 24.aks,
                       backgroundColor: AppColors.primary.withOpacity(0.2),
                       child: Text(
                         expertName.isNotEmpty ? expertName[0] : '?',
@@ -138,7 +139,7 @@ class _CompanyExpertsScreenState extends State<CompanyExpertsScreen> {
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
-                          child: const Icon(Icons.verified_rounded, size: 12, color: Color(0xFFFFFBF0)),
+                          child: Icon(Icons.verified_rounded, size: 12.aks, color: Color(0xFFFFFBF0)),
                         ),
                       ),
                   ],

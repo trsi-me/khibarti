@@ -7,6 +7,7 @@ import 'package:khibarti/screens/join_session_screen.dart';
 import 'package:khibarti/screens/expert_chat_screen.dart';
 import 'package:khibarti/screens/notifications_screen.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
 import 'package:khibarti/utils/session_format.dart';
 
@@ -122,7 +123,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> with WidgetsBinding
                 if (verified)
                   Tooltip(
                     message: l10n.expertVerifiedBadge,
-                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28),
+                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28.aks),
                   ),
               ],
             ),
@@ -205,7 +206,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> with WidgetsBinding
               const SizedBox(height: 10),
               OutlinedButton.icon(
                 onPressed: () => _submitPartnerDirectoryRequest(l10n),
-                icon: const Icon(Icons.refresh_rounded, size: 20),
+                icon: Icon(Icons.refresh_rounded, size: 20.aks),
                 label: Text(l10n.expertPartnerDirRequestCta),
               ),
             ] else ...[
@@ -217,7 +218,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> with WidgetsBinding
               const SizedBox(height: 10),
               FilledButton.tonalIcon(
                 onPressed: () => _submitPartnerDirectoryRequest(l10n),
-                icon: const Icon(Icons.handshake_outlined, size: 20),
+                icon: Icon(Icons.handshake_outlined, size: 20.aks),
                 label: Text(l10n.expertPartnerDirRequestCta),
               ),
             ],
@@ -267,10 +268,10 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> with WidgetsBinding
     return Column(
       children: _sessions.map((s) {
         return KhibartiCard.listItem(
-          leading: const CircleAvatar(
-            radius: 24,
+          leading: CircleAvatar(
+            radius: 24.aks,
             backgroundColor: Color(0xFF1B5E57),
-            child: Icon(Icons.event_available_rounded, color: AppColors.onPrimary, size: 22),
+            child: Icon(Icons.event_available_rounded, color: AppColors.onPrimary, size: 22.aks),
           ),
           title: l10n.withStudent,
           subtitle: [
@@ -310,7 +311,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> with WidgetsBinding
               color: AppColors.primary.withOpacity(0.12),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.notifications_outlined, color: AppColors.primary, size: 22),
+            child: Icon(Icons.notifications_outlined, color: AppColors.primary, size: 22.aks),
           ),
           title: n['title'] as String? ?? '',
           subtitle: n['body'] as String?,
@@ -332,7 +333,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> with WidgetsBinding
         if (otherId == null) return const SizedBox.shrink();
         return KhibartiCard.listItem(
           leading: CircleAvatar(
-            radius: 24,
+            radius: 24.aks,
             backgroundColor: AppColors.primary.withOpacity(0.2),
             child: Text(
               otherName.isNotEmpty ? otherName[0] : '?',
@@ -349,7 +350,7 @@ class _ExpertHomeScreenState extends State<ExpertHomeScreen> with WidgetsBinding
                   builder: (_) => ExpertChatScreen(expertUserId: otherId, expertName: otherName),
                 ),
               ).then((_) => _loadData()),
-              icon: const Icon(Icons.chat_bubble_outline, size: 18),
+              icon: Icon(Icons.chat_bubble_outline, size: 18.aks),
               label: Text(l10n.contact),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primary,

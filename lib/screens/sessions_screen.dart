@@ -7,6 +7,7 @@ import 'package:khibarti/services/certificate_service.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
 import 'package:khibarti/utils/session_format.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 class SessionsScreen extends StatefulWidget {
   const SessionsScreen({super.key});
@@ -86,7 +87,7 @@ class _SessionsScreenState extends State<SessionsScreen>
                 children: List.generate(5, (i) {
                   final s = i + 1;
                   return IconButton(
-                    icon: Icon(selectedScore >= s ? Icons.star : Icons.star_border, color: Colors.amber, size: 36),
+                    icon: Icon(selectedScore >= s ? Icons.star : Icons.star_border, color: Colors.amber, size: 36.aks),
                     onPressed: () => setDialogState(() => selectedScore = s),
                   );
                 }),
@@ -273,7 +274,7 @@ class _SessionList extends StatelessWidget {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => onRate!(s),
-                  icon: const Icon(Icons.star, size: 18),
+                  icon: Icon(Icons.star, size: 18.aks),
                   label: Text(l10n.rateSession),
                 ),
               ),
@@ -281,7 +282,7 @@ class _SessionList extends StatelessWidget {
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () => onDownloadCertificate!(s),
-                  icon: const Icon(Icons.download, size: 18),
+                  icon: Icon(Icons.download, size: 18.aks),
                   label: Text(l10n.downloadCertificate),
                 ),
               ),
@@ -289,7 +290,7 @@ class _SessionList extends StatelessWidget {
         }
         return KhibartiCard.listItem(
           leading: CircleAvatar(
-            radius: 24,
+            radius: 24.aks,
             backgroundColor: AppColors.primary.withOpacity(0.2),
             child: Text(
               expertName.isNotEmpty ? expertName[0] : '?',

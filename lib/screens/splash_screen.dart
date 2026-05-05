@@ -5,6 +5,7 @@ import 'package:khibarti/screens/login_screen.dart';
 import 'package:khibarti/screens/welcome_screen.dart';
 import 'package:khibarti/services/session_service.dart';
 import 'package:khibarti/widgets/khibarti_logo.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// شاشة البداية - تحميل الجلسة المحفوظة ثم الانتقال
 class SplashScreen extends StatefulWidget {
@@ -110,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen>
                 opacity: _fadeAnimation,
                 child: ScaleTransition(
                   scale: _scaleAnimation,
-                  child: const KhibartiLogo(size: 180),
+                  child: KhibartiLogo(size: 180.aks),
                 ),
               );
             },

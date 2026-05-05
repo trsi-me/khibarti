@@ -6,6 +6,7 @@ import 'package:khibarti/screens/join_session_screen.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
 import 'package:khibarti/utils/session_format.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// جلسات الخبير فقط — انضم، إلغاء. لا تقييم ولا شهادة (الطالب من يقيّم)
 class ExpertSessionsScreen extends StatefulWidget {
@@ -184,7 +185,7 @@ class _SessionList extends StatelessWidget {
         }
         return KhibartiCard.listItem(
           leading: CircleAvatar(
-            radius: 24,
+            radius: 24.aks,
             backgroundColor: AppColors.primary.withOpacity(0.2),
             child: Text(
               (s['expert_name'] as String? ?? '?').isNotEmpty ? (s['expert_name'] as String)[0] : '?',

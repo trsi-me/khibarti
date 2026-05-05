@@ -4,6 +4,7 @@ import 'package:khibarti/app_state.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// تفاصيل مستخدم + تعديل / تقييد / حذف (للمدير فقط)
 class AdminUserDetailScreen extends StatefulWidget {
@@ -190,7 +191,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                 children: [
                   Center(
                     child: CircleAvatar(
-                      radius: 40,
+                      radius: 40.aks,
                       backgroundColor: AppColors.primary.withValues(alpha: 0.2),
                       child: Text(
                         _nameCtrl.text.isNotEmpty ? _nameCtrl.text[0] : '?',

@@ -3,6 +3,7 @@ import 'package:khibarti/app_state.dart';
 import 'package:khibarti/services/api_service.dart' show ApiService, ApiException;
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// محادثة الطالب مع الخبير
 class ExpertChatScreen extends StatefulWidget {
@@ -109,7 +110,7 @@ class _ExpertChatScreenState extends State<ExpertChatScreen> {
         title: Row(
           children: [
             CircleAvatar(
-              radius: 18,
+              radius: 18.aks,
               backgroundColor: AppColors.onPrimary.withOpacity(0.3),
               child: Text(
                 widget.expertName.isNotEmpty ? widget.expertName[0] : '?',
@@ -145,7 +146,7 @@ class _ExpertChatScreenState extends State<ExpertChatScreen> {
                           children: [
                             Icon(
                               Icons.chat_bubble_outline,
-                              size: 64,
+                              size: 64.aks,
                               color: Colors.grey.shade400,
                             ),
                             const SizedBox(height: 16),
@@ -217,7 +218,7 @@ class _ExpertChatScreenState extends State<ExpertChatScreen> {
                       child: Icon(
                         Icons.send_rounded,
                         color: AppColors.onPrimary,
-                        size: 28,
+                        size: 28.aks,
                       ),
                     ),
                   ),

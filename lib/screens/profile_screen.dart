@@ -6,6 +6,7 @@ import 'package:khibarti/services/session_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/edit_profile_screen.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -71,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 alignment: Alignment.center,
                 children: [
                   CircleAvatar(
-                    radius: 50,
+                    radius: 50.aks,
                     backgroundColor: const Color(0xFF1B5E57).withOpacity(0.3),
                     backgroundImage: avatarBase64 != null ? MemoryImage(base64Decode(avatarBase64)) : null,
                     child: avatarBase64 == null ? Text(
@@ -89,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 2),
                       ),
-                      child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                      child: Icon(Icons.camera_alt, color: Colors.white, size: 20.aks),
                     ),
                   ),
                 ],
@@ -107,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(width: 8),
                   Tooltip(
                     message: l10n.expertVerifiedBadge,
-                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28),
+                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28.aks),
                   ),
                 ],
               ],

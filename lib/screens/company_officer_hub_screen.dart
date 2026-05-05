@@ -3,6 +3,7 @@ import 'package:khibarti/app_state.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 /// لوحة «مسؤول الشراكات» + إدارة حسابات الشركة الفرعية (مفوّضون)
 class CompanyOfficerHubScreen extends StatefulWidget {
@@ -348,7 +349,7 @@ class _CompanyOfficerHubScreenState extends State<CompanyOfficerHubScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       textDirection: TextDirection.rtl,
       children: [
-        Icon(icon, color: AppColors.primary, size: 26),
+        Icon(icon, color: AppColors.primary, size: 26.aks),
         const SizedBox(width: 12),
         Expanded(
           child: Text(

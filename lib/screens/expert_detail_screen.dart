@@ -3,6 +3,7 @@ import 'package:khibarti/app_state.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/expert_chat_screen.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 
 class ExpertDetailScreen extends StatefulWidget {
   final int expertId;
@@ -94,7 +95,7 @@ class _ExpertDetailScreenState extends State<ExpertDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 50,
+              radius: 50.aks,
               backgroundColor: const Color(0xFF1B5E57).withOpacity(0.3),
               child: Text(
                 name.isNotEmpty ? name[0] : '?',
@@ -121,7 +122,7 @@ class _ExpertDetailScreenState extends State<ExpertDetailScreen> {
                   const SizedBox(width: 8),
                   Tooltip(
                     message: l10n.expertVerifiedBadge,
-                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28),
+                    child: Icon(Icons.verified_rounded, color: Colors.teal.shade700, size: 28.aks),
                   ),
                 ],
               ],
@@ -134,7 +135,7 @@ class _ExpertDetailScreenState extends State<ExpertDetailScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.star, color: Colors.amber, size: 24),
+                Icon(Icons.star, color: Colors.amber, size: 24.aks),
                 const SizedBox(width: 6),
                 Text(
                   '$rating',
@@ -144,7 +145,7 @@ class _ExpertDetailScreenState extends State<ExpertDetailScreen> {
                   ),
                 ),
                 const SizedBox(width: 20),
-                Icon(Icons.work_outline, size: 20, color: Colors.grey.shade600),
+                Icon(Icons.work_outline, size: 20.aks, color: Colors.grey.shade600),
                 const SizedBox(width: 4),
                 Text(
                   '$years ${'سنوات خبرة'}',

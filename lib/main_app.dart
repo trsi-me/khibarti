@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khibarti/app_state.dart';
 import 'package:khibarti/theme/app_theme.dart';
+import 'package:khibarti/utils/accessibility_dim.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/home_screen.dart';
 import 'package:khibarti/screens/explore_screen.dart';
@@ -169,7 +170,7 @@ class _MainAppState extends State<MainApp> {
                 children: [
                   Icon(
                     items[i].icon,
-                    size: 26,
+                    size: 26.aks,
                     color: selected
                         ? AppColors.primary
                         : AppColors.textSecondary,
