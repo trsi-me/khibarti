@@ -110851,20 +110851,22 @@ r=s.w
 r.N$=q
 r.L$=0
 s.aF()},
-atU(){var s=this,r=s.c
-r.toString
-r=A.aB(r,B.aq,t.J)
-r.toString
-if(!s.gW8())return!0
-if(!s.z){s.tM(r.a.gD(0)==="ar"?"\u064a\u062c\u0628 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629 \u0644\u0644\u0645\u062a\u0627\u0628\u0639\u0629":"You must accept to continue")
-return!1}if(!s.Q){s.tM(r.a.gD(0)==="ar"?"\u064a\u062c\u0628 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629 \u0639\u0644\u0649 \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0644\u0644\u0645\u062a\u0627\u0628\u0639\u0629":"You must consent to data recording to continue")
+atU(a){var s,r=this
+if(!a)return!0
+s=r.c
+s.toString
+s=A.aB(s,B.aq,t.J)
+s.toString
+if(!r.gW8())return!0
+if(!r.z){r.tM(s.a.gD(0)==="ar"?"\u064a\u062c\u0628 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629 \u0644\u0644\u0645\u062a\u0627\u0628\u0639\u0629":"You must accept to continue")
+return!1}if(!r.Q){r.tM(s.a.gD(0)==="ar"?"\u064a\u062c\u0628 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629 \u0639\u0644\u0649 \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0644\u0644\u0645\u062a\u0627\u0628\u0639\u0629":"You must consent to data recording to continue")
 return!1}return!0},
 oD(){var s=0,r=A.w(t.H),q,p=this,o,n,m,l,k,j,i
 var $async$oD=A.x(function(a,b){if(a===1)return A.t(b,r)
 while(true)switch(s){case 0:if(!p.d.gW().rA()){s=1
 break}o=p.a
 n=o.e?!1:o.c
-if(!p.atU()){s=1
+if(!p.atU(n)){s=1
 break}p.S(new A.aFU(p))
 o=p.e.a
 m=p.f.a
@@ -110941,7 +110943,7 @@ o.push(B.bM)
 n=i.gD(0)==="ar"?"\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631":"Password"
 o.push(A.nF(!1,k.f,A.ea(j,new A.cN(4,A.b3(20),B.bF),j,B.x1,j,j,j,j,!0,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,n,!0,!0,j,B.xP,j,j,j,j,j,j,j,j,j,j,j),!1,j,j,j,1,!0,j,j,j,j,!1,j,j,B.aw,B.I,j,new A.aG0(q)))
 if(q){n=i.gD(0)==="ar"?"\u062a\u0623\u0643\u064a\u062f \u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631":"Confirm Password"
-B.m.P(o,A.a([B.bM,A.nF(!1,k.r,A.ea(j,new A.cN(4,A.b3(20),B.bF),j,B.x0,j,j,j,j,!0,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,n,!0,!0,j,B.xP,j,j,j,j,j,j,j,j,j,j,j),!1,j,j,j,1,!0,j,j,j,j,!1,j,j,B.aw,B.I,j,new A.aG1(k))],r))}if(k.gW8()){n=A.z(a).awf(new A.r1(j,new A.aC(new A.aG2(),t.b),j,j,j,j,j,j,B.vh))
+B.m.P(o,A.a([B.bM,A.nF(!1,k.r,A.ea(j,new A.cN(4,A.b3(20),B.bF),j,B.x0,j,j,j,j,!0,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,n,!0,!0,j,B.xP,j,j,j,j,j,j,j,j,j,j,j),!1,j,j,j,1,!0,j,j,j,j,!1,j,j,B.aw,B.I,j,new A.aG1(k))],r))}if(q&&k.gW8()){n=A.z(a).awf(new A.r1(j,new A.aC(new A.aG2(),t.b),j,j,j,j,j,j,B.vh))
 m=k.z
 m=A.aU9(B.aU,B.qU,new A.aG3(k),A.H(i.gD(0)==="ar"?"\u0623\u0648\u0627\u0641\u0642 \u0639\u0644\u0649 \u0633\u064a\u0627\u0633\u0629 \u0627\u0644\u062e\u0635\u0648\u0635\u064a\u0629 \u0648\u0627\u0644\u0634\u0631\u0648\u0637 \u0648\u0627\u0644\u0623\u062d\u0643\u0627\u0645":"I agree to the Privacy Policy and Terms",j,j,j,j,B.TT,j,B.al,j),m)
 l=k.Q

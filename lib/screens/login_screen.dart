@@ -52,7 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  bool _validateConsents() {
+  bool _validateConsents({required bool signUp}) {
+    if (!signUp) return true;
     final l10n = AppLocalizations.of(context);
     if (!_needsConsent) return true;
     if (!_acceptedTerms) {
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final signUp = widget.adminOnly ? false : widget.isSignUp;
-    if (!_validateConsents()) return;
+    if (!_validateConsents(signUp: signUp)) return;
     setState(() => _loading = true);
 
     if (signUp) {
@@ -210,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: (v) => v != _passwordController.text ? 'كلمتا المرور غير متطابقتين' : null,
                   ),
                 ],
-                if (_needsConsent) ...[
+                if (signUp && _needsConsent) ...[
                   const SizedBox(height: 12),
                   Theme(
                     data: Theme.of(context).copyWith(
