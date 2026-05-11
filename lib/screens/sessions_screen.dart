@@ -4,6 +4,8 @@ import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/screens/join_session_screen.dart';
 import 'package:khibarti/services/certificate_service.dart';
+import 'package:khibarti/services/certificate_storage.dart';
+import 'package:khibarti/screens/certificate_preview_screen.dart';
 import 'package:khibarti/theme/app_theme.dart';
 import 'package:khibarti/widgets/khibarti_card.dart';
 import 'package:khibarti/utils/session_format.dart';
@@ -131,17 +133,34 @@ class _SessionsScreenState extends State<SessionsScreen>
       specialty: specialty,
       sessionDate: sessionDate,
     );
-    final path = await CertificateService.generateAndSave(
+
+    final bytes = await CertificateService.generatePdfBytes(
       expertName: expertName,
       specialty: specialty,
       sessionDate: sessionDate,
       userName: userName,
     );
-    if (mounted && path != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('تم حفظ الشهادة: $path')));
-    } else if (mounted) {
+
+    if (!mounted) return;
+    if (bytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('فشل في إنشاء الشهادة')));
+      return;
     }
+
+    final fileName = 'certificate_${DateTime.now().millisecondsSinceEpoch}.pdf';
+    final saved = await certificateStorage.savePdf(bytes: bytes, fileName: fileName);
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(saved != null ? 'تم حفظ الشهادة على جهازك' : 'تم إنشاء الشهادة')),
+    );
+
+    await showCertificatePreviewDialog(
+      context,
+      pdfBytes: bytes,
+      title: 'الشهادة',
+      pdfFileName: saved ?? fileName,
+    );
   }
 
   void _openJoinSession(Map<String, dynamic> session) {

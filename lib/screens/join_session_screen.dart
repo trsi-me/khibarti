@@ -3,6 +3,8 @@ import 'package:khibarti/app_state.dart';
 import 'package:khibarti/services/api_service.dart';
 import 'package:khibarti/l10n/app_localizations.dart';
 import 'package:khibarti/services/certificate_service.dart';
+import 'package:khibarti/services/certificate_storage.dart';
+import 'package:khibarti/screens/certificate_preview_screen.dart';
 import 'package:khibarti/utils/session_format.dart';
 
 /// شاشة الجلسة — محادثة فقط (بدون مكالمة فيديو)
@@ -84,12 +86,26 @@ class _JoinSessionScreenState extends State<JoinSessionScreen> {
           specialty: widget.specialty,
           sessionDate: '${widget.date} ${widget.time}',
         );
-        await CertificateService.generateAndSave(
+        final userName = AppState.currentUser?['name'] as String? ?? 'المستخدم';
+        final bytes = await CertificateService.generatePdfBytes(
           expertName: widget.expertName,
           specialty: widget.specialty,
           sessionDate: '${widget.date} ${widget.time}',
-          userName: AppState.currentUser?['name'] as String? ?? 'المستخدم',
+          userName: userName,
         );
+
+        if (bytes != null && mounted) {
+          final fileName = 'certificate_${DateTime.now().millisecondsSinceEpoch}.pdf';
+          final saved = await certificateStorage.savePdf(bytes: bytes, fileName: fileName);
+          if (!mounted) return;
+
+          await showCertificatePreviewDialog(
+            context,
+            pdfBytes: bytes,
+            title: 'الشهادة',
+            pdfFileName: saved ?? fileName,
+          );
+        }
       }
     }
     if (mounted) Navigator.pop(context);

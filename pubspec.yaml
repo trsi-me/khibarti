@@ -46,6 +46,7 @@ dependencies:
   intl: ^0.20.2
   flutter_web_plugins:
     sdk: flutter
+  printing: ^5.14.3
 
 dev_dependencies:
   flutter_test:

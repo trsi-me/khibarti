@@ -26,12 +26,15 @@ if (-not $SkipPubGet) {
   flutter pub get
 }
 
+# تشكيل العربية في PDF (حزمة pdf): https://pub.dev/packages/pdf — use_arabic
+$PdfArabicDefine = '--dart-define=use_arabic=true'
+
 if ($WebDebug) {
   Write-Host ">> flutter build web (debug, canvas kit)" -ForegroundColor Yellow
-  flutter build web
+  flutter build web $PdfArabicDefine
 } else {
   Write-Host ">> flutter build web --release" -ForegroundColor Yellow
-  flutter build web --release
+  flutter build web --release $PdfArabicDefine
 }
 
 $index = Join-Path $src 'index.html'
